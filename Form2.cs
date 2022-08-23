@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace Interface
 {
@@ -15,6 +7,18 @@ namespace Interface
         public Form2()
         {
             InitializeComponent();
+
+            Label fittingLabel = new Label();
+            fittingLabel.Text = LineNumberTextBox.Text;
+            fittingLabel.Font = LineNumberTextBox.Font;
+            fittingLabel.AutoSize = true;
+
+            fittingLabel.Location = new Point(-1000, -1000);
+            Controls.Add(fittingLabel);
+
+            LineNumberTextBox.Width = fittingLabel.Width;
+
+            Controls.Remove(fittingLabel);
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -60,15 +64,16 @@ namespace Interface
             int Last_Index = richTextBox1.GetCharIndexFromPosition(pt);
             int Last_Line = richTextBox1.GetLineFromCharIndex(Last_Index);
             // set Center alignment to LineNumberTextBox    
-            LineNumberTextBox.SelectionAlignment = HorizontalAlignment.Center;
+            LineNumberTextBox.SelectionAlignment = HorizontalAlignment.Right;
             // set LineNumberTextBox text to null & width to getWidth() function value    
             LineNumberTextBox.Text = "";
-            LineNumberTextBox.Width = getWidth();
+            //LineNumberTextBox.Width = getWidth();
             // now add each line number to LineNumberTextBox upto last line    
             for (int i = First_Line; i <= Last_Line + 2; i++)
             {
                 LineNumberTextBox.Text += i + 1 + "\n";
             }
+
         }
 
         private void Form2_Resize(object sender, EventArgs e)
@@ -99,6 +104,18 @@ namespace Interface
             {
                 AddLineNumbers();
             }
+
+            Label fittingLabel = new Label();
+            fittingLabel.Text = LineNumberTextBox.Text;
+            fittingLabel.Font = LineNumberTextBox.Font;
+            fittingLabel.AutoSize = true;
+
+            fittingLabel.Location = new Point(-1000, -1000);
+            Controls.Add(fittingLabel);
+
+            LineNumberTextBox.Width = fittingLabel.Width;
+
+            Controls.Remove(fittingLabel);
         }
 
         private void LineNumberTextBox_MouseDown(object sender, MouseEventArgs e)
@@ -114,11 +131,108 @@ namespace Interface
             AddLineNumbers();
         }
 
-        private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
+        private void abrirToolStripButton_Click(object sender, EventArgs e)
         {
+            AbrirArquivo();
+            AddLineNumbers();
+        }
 
-            if (e.Control)
-                LineNumberTextBox.ZoomFactor = richTextBox1.ZoomFactor;
+        private void salvarToolStripButton_Click(object sender, EventArgs e)
+        {
+            ChamaSalvarArquivo();
+        }
+
+        private void novaToolStripButton_Click(object sender, EventArgs e)
+        {
+            ChamaSalvarArquivo();
+            richTextBox1.Clear();
+            richTextBox1.Focus();
+        }
+
+        private void ChamaSalvarArquivo()
+        {
+            if (!string.IsNullOrEmpty(richTextBox1.Text))
+            {
+                if ((MessageBox.Show("Deseja Salvar o arquivo ?", "Salvar Arquivo", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes))
+                {
+                    Salvar_Arquivo();
+                }
+            }
+        }
+
+        private void Salvar_Arquivo()
+        {
+            try
+            {
+                // Pega o nome do arquivo para salvar
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    // abre um stream para escrita e cria um StreamWriter para implementar o stream
+                    FileStream fs = new FileStream(saveFileDialog1.FileName, FileMode.OpenOrCreate, FileAccess.Write);
+                    StreamWriter m_streamWriter = new StreamWriter(fs);
+                    m_streamWriter.Flush();
+                    // Escreve para o arquivo usando a classe StreamWriter
+                    m_streamWriter.BaseStream.Seek(0, SeekOrigin.Begin);
+                    // escreve no controle richtextbox
+                    m_streamWriter.Write(richTextBox1.Text);
+                    // fecha o arquivo
+                    m_streamWriter.Flush();
+                    m_streamWriter.Close();
+                    toolStripStatusLabel1.Text = openFileDialog1.FileName;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro : " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void AbrirArquivo()
+        {
+            //define as propriedades do controle 
+            //OpenFileDialog
+            this.openFileDialog1.Multiselect = true;
+            this.openFileDialog1.Title = "Selecionar Arquivo";
+            openFileDialog1.InitialDirectory = @"C:\Dados\";
+            //filtra para exibir somente arquivos textos
+            openFileDialog1.Filter = "Texts (*.TXT)|*.TXT|" + "All files (*.*)|*.*";
+            openFileDialog1.CheckFileExists = true;
+            openFileDialog1.CheckPathExists = true;
+            openFileDialog1.FilterIndex = 1;
+            openFileDialog1.RestoreDirectory = true;
+            openFileDialog1.ReadOnlyChecked = true;
+            openFileDialog1.ShowReadOnly = true;
+            DialogResult dr = openFileDialog1.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                try
+                {
+                    FileStream fs = new FileStream(openFileDialog1.FileName, FileMode.Open, FileAccess.Read);
+                    StreamReader m_streamReader = new StreamReader(fs);
+                    // Lê o arquivo usando a classe StreamReader
+                    m_streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
+                    // Lê cada linha do stream e faz o parse até a última linha
+                    richTextBox1.Text = "";
+                    string strLine = m_streamReader.ReadLine();
+                    while (strLine != null)
+                    {
+                        richTextBox1.Text += strLine + "\n";
+                        strLine = m_streamReader.ReadLine();
+                    }
+                    // Fecha o stream
+                    m_streamReader.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro : " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void LineNumberTextBox_ContentsResized(object sender, ContentsResizedEventArgs e)
+        {
+            
         }
     }
 }
