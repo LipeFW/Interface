@@ -69,11 +69,22 @@ namespace Interface
             LineNumberTextBox.Text = "";
             //LineNumberTextBox.Width = getWidth();
             // now add each line number to LineNumberTextBox upto last line    
-            for (int i = First_Line; i <= Last_Line + 2; i++)
+            for (int i = First_Line; i <= Last_Line + 1; i++)
             {
                 LineNumberTextBox.Text += i + 1 + "\n";
             }
 
+            Label fittingLabel = new Label();
+            fittingLabel.Text = LineNumberTextBox.Text;
+            fittingLabel.Font = LineNumberTextBox.Font;
+            fittingLabel.AutoSize = true;
+
+            fittingLabel.Location = new Point(-1000, -1000);
+            Controls.Add(fittingLabel);
+
+            LineNumberTextBox.Width = fittingLabel.Width;
+
+            Controls.Remove(fittingLabel);
         }
 
         private void Form2_Resize(object sender, EventArgs e)
@@ -104,18 +115,6 @@ namespace Interface
             {
                 AddLineNumbers();
             }
-
-            Label fittingLabel = new Label();
-            fittingLabel.Text = LineNumberTextBox.Text;
-            fittingLabel.Font = LineNumberTextBox.Font;
-            fittingLabel.AutoSize = true;
-
-            fittingLabel.Location = new Point(-1000, -1000);
-            Controls.Add(fittingLabel);
-
-            LineNumberTextBox.Width = fittingLabel.Width;
-
-            Controls.Remove(fittingLabel);
         }
 
         private void LineNumberTextBox_MouseDown(object sender, MouseEventArgs e)
@@ -135,6 +134,7 @@ namespace Interface
         {
             AbrirArquivo();
             AddLineNumbers();
+            toolStripStatusLabel1.Text = openFileDialog1.FileName;
         }
 
         private void salvarToolStripButton_Click(object sender, EventArgs e)
@@ -233,6 +233,27 @@ namespace Interface
         private void LineNumberTextBox_ContentsResized(object sender, ContentsResizedEventArgs e)
         {
             
+        }
+
+        private void Form2_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void Form2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if ((Keys)e.KeyChar == Keys.Control)
+            {
+                textBox1.Text = e.KeyChar.ToString();
+            }
+        }
+
+        private void richTextBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if ((Keys)e.KeyChar == Keys.Control)
+            {
+                textBox1.Text = e.KeyChar.ToString();
+            }
         }
     }
 }
