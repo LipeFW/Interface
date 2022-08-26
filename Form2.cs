@@ -1,12 +1,20 @@
-﻿using System.Windows.Forms;
-
-namespace Interface
+﻿namespace Interface
 {
     public partial class Form2 : Form
     {
+
+        private bool isSaved = false;
+
         public Form2()
         {
             InitializeComponent();
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            LineNumberTextBox.Font = richTextBox1.Font;
+            richTextBox1.Select();
+            AddLineNumbers();
 
             Label fittingLabel = new Label();
             fittingLabel.Text = LineNumberTextBox.Text;
@@ -19,13 +27,6 @@ namespace Interface
             LineNumberTextBox.Width = fittingLabel.Width;
 
             Controls.Remove(fittingLabel);
-        }
-
-        private void Form2_Load(object sender, EventArgs e)
-        {
-            LineNumberTextBox.Font = richTextBox1.Font;
-            richTextBox1.Select();
-            AddLineNumbers();
         }
 
         public int getWidth()
@@ -144,19 +145,28 @@ namespace Interface
 
         private void novaToolStripButton_Click(object sender, EventArgs e)
         {
-            ChamaSalvarArquivo();
-            richTextBox1.Clear();
-            richTextBox1.Focus();
-        }
-
-        private void ChamaSalvarArquivo()
-        {
             if (!string.IsNullOrEmpty(richTextBox1.Text))
             {
                 if ((MessageBox.Show("Deseja Salvar o arquivo ?", "Salvar Arquivo", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes))
                 {
                     Salvar_Arquivo();
                 }
+            }
+
+            richTextBox1.Clear();
+            richTextBox1.Focus();
+
+            isSaved = false;
+        }
+
+        private void ChamaSalvarArquivo()
+        {
+            if (!string.IsNullOrEmpty(richTextBox1.Text))
+            {
+                //if ((MessageBox.Show("Deseja Salvar o arquivo ?", "Salvar Arquivo", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes))
+                //{
+                    Salvar_Arquivo();
+                //}
             }
         }
 
@@ -179,6 +189,8 @@ namespace Interface
                     m_streamWriter.Flush();
                     m_streamWriter.Close();
                     toolStripStatusLabel1.Text = openFileDialog1.FileName;
+
+                    isSaved = true;
 
                 }
             }
@@ -232,7 +244,26 @@ namespace Interface
 
         private void LineNumberTextBox_ContentsResized(object sender, ContentsResizedEventArgs e)
         {
-            
+
+        }
+
+        private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (Control.ModifierKeys == Keys.Control)
+                switch (e.KeyCode)
+                {
+                    case Keys.N:
+                        novaToolStripButton_Click(sender, e);
+                        break;
+                    case Keys.O:
+                        abrirToolStripButton_Click(sender, e);
+                        break;
+                    case Keys.S:
+                        salvarToolStripButton_Click(sender, e);
+                        break;
+                    default:
+                        break;
+                }
         }
     }
 }
