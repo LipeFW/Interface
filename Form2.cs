@@ -309,6 +309,9 @@ namespace Interface
                     case Keys.C:
                         copiarToolStripButton_Click(sender, e);
                         break;
+                    case Keys.X:
+                        recortarToolStripButton_Click(sender, e);
+                        break;
                     default:
                         break;
                 }
@@ -363,7 +366,8 @@ namespace Interface
 
         private void recortarToolStripButton_Click(object sender, EventArgs e)
         {
-            
+            copiarToolStripButton_Click(sender, e);
+            richTextBox1.SelectedText = "";
         }
 
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
