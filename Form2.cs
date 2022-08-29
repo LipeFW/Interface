@@ -20,18 +20,6 @@ namespace Interface
             LineNumberTextBox.Font = richTextBox1.Font;
             richTextBox1.Select();
             AddLineNumbers();
-
-            Label fittingLabel = new Label();
-            fittingLabel.Text = LineNumberTextBox.Text;
-            fittingLabel.Font = LineNumberTextBox.Font;
-            fittingLabel.AutoSize = true;
-
-            fittingLabel.Location = new Point(-1000, -1000);
-            Controls.Add(fittingLabel);
-
-            LineNumberTextBox.Width = fittingLabel.Width;
-
-            Controls.Remove(fittingLabel);
         }
 
         public int getWidth()
@@ -58,28 +46,32 @@ namespace Interface
 
         public void AddLineNumbers()
         {
-            // create & set Point pt to (0,0)    
             Point pt = new Point(0, 0);
+
             // get First Index & First Line from richTextBox1    
             int First_Index = richTextBox1.GetCharIndexFromPosition(pt);
             int First_Line = richTextBox1.GetLineFromCharIndex(First_Index);
+
             // set X & Y coordinates of Point pt to ClientRectangle Width & Height respectively    
             pt.X = ClientRectangle.Width;
             pt.Y = ClientRectangle.Height;
+
             // get Last Index & Last Line from richTextBox1    
             int Last_Index = richTextBox1.GetCharIndexFromPosition(pt);
             int Last_Line = richTextBox1.GetLineFromCharIndex(Last_Index);
+
             // set Center alignment to LineNumberTextBox    
             LineNumberTextBox.SelectionAlignment = HorizontalAlignment.Right;
+
             // set LineNumberTextBox text to null & width to getWidth() function value    
             LineNumberTextBox.Text = "";
-            //LineNumberTextBox.Width = getWidth();
+            LineNumberTextBox.Width = getWidth();
+
             // now add each line number to LineNumberTextBox upto last line    
-            for (int i = First_Line; i <= Last_Line + 2; i++)
+            for (int i = First_Line; i <= Last_Line + 1; i++)
             {
                 LineNumberTextBox.Text += i + 1 + "\n";
             }
-
         }
 
         private void Form2_Resize(object sender, EventArgs e)
@@ -111,20 +103,6 @@ namespace Interface
             {
                 AddLineNumbers();
             }
-
-            Label fittingLabel = new Label();
-            fittingLabel.Text = LineNumberTextBox.Text;
-            fittingLabel.Font = LineNumberTextBox.Font;
-            fittingLabel.AutoSize = true;
-
-            fittingLabel.Location = new Point(-1000, -1000);
-            Controls.Add(fittingLabel);
-
-            LineNumberTextBox.Width = fittingLabel.Width;
-
-            isEditing = true;
-
-            Controls.Remove(fittingLabel);
         }
 
         private void LineNumberTextBox_MouseDown(object sender, MouseEventArgs e)
@@ -144,6 +122,7 @@ namespace Interface
         {
             AbrirArquivo();
             AddLineNumbers();
+            toolStripStatusLabel1.Text = openFileDialog1.FileName;
         }
 
         private void salvarToolStripButton_Click(object sender, EventArgs e)
@@ -175,6 +154,17 @@ namespace Interface
             // Limpa área de mensagens
             textBox1.Text = "";
             isSaved = false;
+        }
+
+        private void ChamaSalvarArquivo()
+        {
+            if (!string.IsNullOrEmpty(richTextBox1.Text))
+            {
+                if ((MessageBox.Show("Deseja Salvar o arquivo ?", "Salvar Arquivo", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes))
+                {
+                    Salvar_Arquivo();
+                }
+            }
         }
 
         private void Salvar_Arquivo()
@@ -285,11 +275,6 @@ namespace Interface
                     MessageBox.Show("Erro : " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-        }
-
-        private void LineNumberTextBox_ContentsResized(object sender, ContentsResizedEventArgs e)
-        {
-
         }
 
         private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
