@@ -342,7 +342,7 @@ namespace Interface
                 richTextBox1.Text += (String)iData.GetData(DataFormats.Text);
                 // move o cursor para o fim da linha onde o texto foi copiado
                 richTextBox1.SelectionStart = richTextBox1.Text.Length;
-                richTextBox1.SelectionLength = 0;
+                
             }
         }
 
