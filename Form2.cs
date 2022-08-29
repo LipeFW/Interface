@@ -2,9 +2,6 @@
 {
     public partial class Form2 : Form
     {
-
-        private bool isSaved = false;
-
         public Form2()
         {
             InitializeComponent();
@@ -15,18 +12,6 @@
             LineNumberTextBox.Font = richTextBox1.Font;
             richTextBox1.Select();
             AddLineNumbers();
-
-            Label fittingLabel = new Label();
-            fittingLabel.Text = LineNumberTextBox.Text;
-            fittingLabel.Font = LineNumberTextBox.Font;
-            fittingLabel.AutoSize = true;
-
-            fittingLabel.Location = new Point(-1000, -1000);
-            Controls.Add(fittingLabel);
-
-            LineNumberTextBox.Width = fittingLabel.Width;
-
-            Controls.Remove(fittingLabel);
         }
 
         public int getWidth()
@@ -53,28 +38,32 @@
 
         public void AddLineNumbers()
         {
-            // create & set Point pt to (0,0)    
             Point pt = new Point(0, 0);
+
             // get First Index & First Line from richTextBox1    
             int First_Index = richTextBox1.GetCharIndexFromPosition(pt);
             int First_Line = richTextBox1.GetLineFromCharIndex(First_Index);
+
             // set X & Y coordinates of Point pt to ClientRectangle Width & Height respectively    
             pt.X = ClientRectangle.Width;
             pt.Y = ClientRectangle.Height;
+
             // get Last Index & Last Line from richTextBox1    
             int Last_Index = richTextBox1.GetCharIndexFromPosition(pt);
             int Last_Line = richTextBox1.GetLineFromCharIndex(Last_Index);
+
             // set Center alignment to LineNumberTextBox    
             LineNumberTextBox.SelectionAlignment = HorizontalAlignment.Right;
+
             // set LineNumberTextBox text to null & width to getWidth() function value    
             LineNumberTextBox.Text = "";
-            //LineNumberTextBox.Width = getWidth();
+            LineNumberTextBox.Width = getWidth();
+
             // now add each line number to LineNumberTextBox upto last line    
-            for (int i = First_Line; i <= Last_Line + 2; i++)
+            for (int i = First_Line; i <= Last_Line + 1; i++)
             {
                 LineNumberTextBox.Text += i + 1 + "\n";
             }
-
         }
 
         private void Form2_Resize(object sender, EventArgs e)
@@ -105,18 +94,6 @@
             {
                 AddLineNumbers();
             }
-
-            Label fittingLabel = new Label();
-            fittingLabel.Text = LineNumberTextBox.Text;
-            fittingLabel.Font = LineNumberTextBox.Font;
-            fittingLabel.AutoSize = true;
-
-            fittingLabel.Location = new Point(-1000, -1000);
-            Controls.Add(fittingLabel);
-
-            LineNumberTextBox.Width = fittingLabel.Width;
-
-            Controls.Remove(fittingLabel);
         }
 
         private void LineNumberTextBox_MouseDown(object sender, MouseEventArgs e)
@@ -136,6 +113,7 @@
         {
             AbrirArquivo();
             AddLineNumbers();
+            toolStripStatusLabel1.Text = openFileDialog1.FileName;
         }
 
         private void salvarToolStripButton_Click(object sender, EventArgs e)
@@ -155,18 +133,16 @@
 
             richTextBox1.Clear();
             richTextBox1.Focus();
-
-            isSaved = false;
         }
 
         private void ChamaSalvarArquivo()
         {
             if (!string.IsNullOrEmpty(richTextBox1.Text))
             {
-                //if ((MessageBox.Show("Deseja Salvar o arquivo ?", "Salvar Arquivo", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes))
-                //{
+                if ((MessageBox.Show("Deseja Salvar o arquivo ?", "Salvar Arquivo", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes))
+                {
                     Salvar_Arquivo();
-                //}
+                }
             }
         }
 
@@ -189,9 +165,6 @@
                     m_streamWriter.Flush();
                     m_streamWriter.Close();
                     toolStripStatusLabel1.Text = openFileDialog1.FileName;
-
-                    isSaved = true;
-
                 }
             }
             catch (Exception ex)
@@ -240,11 +213,6 @@
                     MessageBox.Show("Erro : " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-        }
-
-        private void LineNumberTextBox_ContentsResized(object sender, ContentsResizedEventArgs e)
-        {
-
         }
 
         private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
