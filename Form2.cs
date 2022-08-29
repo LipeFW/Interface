@@ -15,18 +15,6 @@
             LineNumberTextBox.Font = richTextBox1.Font;
             richTextBox1.Select();
             AddLineNumbers();
-
-            Label fittingLabel = new Label();
-            fittingLabel.Text = LineNumberTextBox.Text;
-            fittingLabel.Font = LineNumberTextBox.Font;
-            fittingLabel.AutoSize = true;
-
-            fittingLabel.Location = new Point(-1000, -1000);
-            Controls.Add(fittingLabel);
-
-            LineNumberTextBox.Width = fittingLabel.Width;
-
-            Controls.Remove(fittingLabel);
         }
 
         public int getWidth()
@@ -70,10 +58,22 @@
             LineNumberTextBox.Text = "";
             //LineNumberTextBox.Width = getWidth();
             // now add each line number to LineNumberTextBox upto last line    
-            for (int i = First_Line; i <= Last_Line + 2; i++)
+            for (int i = First_Line; i <= Last_Line + 1; i++)
             {
                 LineNumberTextBox.Text += i + 1 + "\n";
             }
+
+            Label fittingLabel = new Label();
+            fittingLabel.Text = LineNumberTextBox.Text;
+            fittingLabel.Font = LineNumberTextBox.Font;
+            fittingLabel.AutoSize = true;
+
+            fittingLabel.Location = new Point(-1000, -1000);
+            Controls.Add(fittingLabel);
+
+            LineNumberTextBox.Width = fittingLabel.Width;
+
+            Controls.Remove(fittingLabel);
 
         }
 
@@ -106,17 +106,7 @@
                 AddLineNumbers();
             }
 
-            Label fittingLabel = new Label();
-            fittingLabel.Text = LineNumberTextBox.Text;
-            fittingLabel.Font = LineNumberTextBox.Font;
-            fittingLabel.AutoSize = true;
-
-            fittingLabel.Location = new Point(-1000, -1000);
-            Controls.Add(fittingLabel);
-
-            LineNumberTextBox.Width = fittingLabel.Width;
-
-            Controls.Remove(fittingLabel);
+            
         }
 
         private void LineNumberTextBox_MouseDown(object sender, MouseEventArgs e)
@@ -136,6 +126,7 @@
         {
             AbrirArquivo();
             AddLineNumbers();
+            toolStripStatusLabel1.Text = openFileDialog1.FileName;
         }
 
         private void salvarToolStripButton_Click(object sender, EventArgs e)
