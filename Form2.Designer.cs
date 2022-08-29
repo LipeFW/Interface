@@ -234,6 +234,7 @@ namespace Interface
             // 
             // richTextBox1
             // 
+            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox1.Location = new System.Drawing.Point(34, 0);
             this.richTextBox1.Name = "richTextBox1";
@@ -250,16 +251,18 @@ namespace Interface
             // 
             // LineNumberTextBox
             // 
+            this.LineNumberTextBox.BackColor = System.Drawing.Color.White;
+            this.LineNumberTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LineNumberTextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.LineNumberTextBox.Enabled = false;
+            this.LineNumberTextBox.ForeColor = System.Drawing.Color.Black;
             this.LineNumberTextBox.Location = new System.Drawing.Point(0, 0);
             this.LineNumberTextBox.Name = "LineNumberTextBox";
+            this.LineNumberTextBox.ReadOnly = true;
             this.LineNumberTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.LineNumberTextBox.Size = new System.Drawing.Size(34, 293);
             this.LineNumberTextBox.TabIndex = 0;
             this.LineNumberTextBox.Text = "";
             this.LineNumberTextBox.WordWrap = false;
-            this.LineNumberTextBox.ContentsResized += new System.Windows.Forms.ContentsResizedEventHandler(this.LineNumberTextBox_ContentsResized);
             this.LineNumberTextBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LineNumberTextBox_MouseDown);
             // 
             // textBox1
