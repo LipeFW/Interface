@@ -56,25 +56,12 @@
             LineNumberTextBox.SelectionAlignment = HorizontalAlignment.Right;
             // set LineNumberTextBox text to null & width to getWidth() function value    
             LineNumberTextBox.Text = "";
-            //LineNumberTextBox.Width = getWidth();
+            LineNumberTextBox.Width = getWidth();
             // now add each line number to LineNumberTextBox upto last line    
             for (int i = First_Line; i <= Last_Line + 1; i++)
             {
                 LineNumberTextBox.Text += i + 1 + "\n";
             }
-
-            Label fittingLabel = new Label();
-            fittingLabel.Text = LineNumberTextBox.Text;
-            fittingLabel.Font = LineNumberTextBox.Font;
-            fittingLabel.AutoSize = true;
-
-            fittingLabel.Location = new Point(-1000, -1000);
-            Controls.Add(fittingLabel);
-
-            LineNumberTextBox.Width = fittingLabel.Width;
-
-            Controls.Remove(fittingLabel);
-
         }
 
         private void Form2_Resize(object sender, EventArgs e)
@@ -231,11 +218,6 @@
                     MessageBox.Show("Erro : " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-        }
-
-        private void LineNumberTextBox_ContentsResized(object sender, ContentsResizedEventArgs e)
-        {
-
         }
 
         private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
