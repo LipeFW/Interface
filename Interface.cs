@@ -99,6 +99,8 @@
             {
                 AddLineNumbers();
             }
+
+            isEditing = true;
         }
 
         private void LineNumberTextBox_MouseDown(object sender, MouseEventArgs e)
