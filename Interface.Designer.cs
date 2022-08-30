@@ -137,11 +137,12 @@ namespace Interface
             this.copiarToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.copiarToolStripButton.Name = "copiarToolStripButton";
             this.copiarToolStripButton.Padding = new System.Windows.Forms.Padding(10);
-            this.copiarToolStripButton.Size = new System.Drawing.Size(102, 67);
-            this.copiarToolStripButton.Text = "copiar [ctrl-s]";
+            this.copiarToolStripButton.Size = new System.Drawing.Size(103, 67);
+            this.copiarToolStripButton.Text = "copiar [ctrl-c]";
             this.copiarToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.copiarToolStripButton.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.copiarToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.copiarToolStripButton.Click += new System.EventHandler(this.copiarToolStripButton_Click);
             // 
             // colarToolStripButton
             // 
@@ -154,6 +155,7 @@ namespace Interface
             this.colarToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.colarToolStripButton.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.colarToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.colarToolStripButton.Click += new System.EventHandler(this.colarToolStripButton_Click);
             // 
             // recortarToolStripButton
             // 
@@ -166,6 +168,7 @@ namespace Interface
             this.recortarToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.recortarToolStripButton.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.recortarToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.recortarToolStripButton.Click += new System.EventHandler(this.recortarToolStripButton_Click);
             // 
             // toolStripSeparator1
             // 
@@ -186,6 +189,7 @@ namespace Interface
             this.compilarToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.compilarToolStripButton.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.compilarToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.compilarToolStripButton.Click += new System.EventHandler(this.compilarToolStripButton_Click);
             // 
             // infoToolStripButton
             // 
@@ -198,13 +202,14 @@ namespace Interface
             this.infoToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.infoToolStripButton.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.infoToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.infoToolStripButton.Click += new System.EventHandler(this.infoToolStripButton_Click);
             // 
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 396);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 536);
             this.statusStrip1.MinimumSize = new System.Drawing.Size(900, 25);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(900, 25);
@@ -216,6 +221,7 @@ namespace Interface
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(131, 20);
             this.toolStripStatusLabel1.Text = "pasta\\nome do arquivo";
+            this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
             // splitContainer1
             // 
@@ -232,8 +238,8 @@ namespace Interface
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.textBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(894, 326);
-            this.splitContainer1.SplitterDistance = 205;
+            this.splitContainer1.Size = new System.Drawing.Size(894, 466);
+            this.splitContainer1.SplitterDistance = 293;
             this.splitContainer1.TabIndex = 2;
             // 
             // richTextBox1
@@ -243,7 +249,7 @@ namespace Interface
             this.richTextBox1.Location = new System.Drawing.Point(34, 0);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
-            this.richTextBox1.Size = new System.Drawing.Size(860, 205);
+            this.richTextBox1.Size = new System.Drawing.Size(860, 293);
             this.richTextBox1.TabIndex = 1;
             this.richTextBox1.Text = "";
             this.richTextBox1.WordWrap = false;
@@ -277,9 +283,11 @@ namespace Interface
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(894, 117);
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBox1.Size = new System.Drawing.Size(894, 169);
             this.textBox1.TabIndex = 0;
             this.textBox1.WordWrap = false;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // openFileDialog1
             // 
@@ -289,11 +297,11 @@ namespace Interface
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(894, 421);
+            this.ClientSize = new System.Drawing.Size(894, 561);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
-            this.MinimumSize = new System.Drawing.Size(897, 415);
+            this.MinimumSize = new System.Drawing.Size(910, 600);
             this.Name = "Interface";
             this.ShowIcon = false;
             this.Text = "Interface";

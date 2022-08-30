@@ -2,6 +2,10 @@
 {
     public partial class Interface : Form
     {
+
+        private bool isSaved = false;
+        private bool isEditing = false;
+
         public Interface()
         {
             InitializeComponent();
@@ -90,6 +94,7 @@
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
+           
             if (richTextBox1.Text == "")
             {
                 AddLineNumbers();
@@ -118,22 +123,33 @@
 
         private void salvarToolStripButton_Click(object sender, EventArgs e)
         {
-            ChamaSalvarArquivo();
+            Salvar_Arquivo();
         }
 
         private void novaToolStripButton_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(richTextBox1.Text))
+            if (!isSaved)
             {
                 if ((MessageBox.Show("Deseja Salvar o arquivo ?", "Salvar Arquivo", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes))
                 {
                     Salvar_Arquivo();
                 }
             }
-
+            else if (isEditing)
+            {
+                if ((MessageBox.Show("Você tem modificações não salvas. Deseja salvar as alterações?", "Salvar Arquivo", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes))
+                {
+                    editaArquivo();
+                }
+            }
+            // Limpa o editor
             richTextBox1.Clear();
             richTextBox1.Focus();
+            // Limpa barra de status
             toolStripStatusLabel1.Text = "pasta\\nome do arquivo";
+            // Limpa área de mensagens
+            textBox1.Text = "";
+            isSaved = false;
         }
 
         private void ChamaSalvarArquivo()
@@ -149,33 +165,69 @@
 
         private void Salvar_Arquivo()
         {
-            try
-            {
-                // Pega o nome do arquivo para salvar
-                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+           // se o arquivo ainda nao foi salvo, abre o diálogo pra save
+           if (!isSaved)
+           {
+                try
                 {
-                    // abre um stream para escrita e cria um StreamWriter para implementar o stream
-                    FileStream fs = new FileStream(saveFileDialog1.FileName, FileMode.OpenOrCreate, FileAccess.Write);
-                    StreamWriter m_streamWriter = new StreamWriter(fs);
-                    m_streamWriter.Flush();
-                    // Escreve para o arquivo usando a classe StreamWriter
-                    m_streamWriter.BaseStream.Seek(0, SeekOrigin.Begin);
-                    // escreve no controle richtextbox
-                    m_streamWriter.Write(richTextBox1.Text);
-                    // fecha o arquivo
-                    m_streamWriter.Flush();
-                    m_streamWriter.Close();
-                    toolStripStatusLabel1.Text = openFileDialog1.FileName;
+                    // sugere um nome padrão ja com a extensão .txt e filtra
+                    saveFileDialog1.FileName = "programa.txt";
+                    saveFileDialog1.Filter = "Texts (*.TXT)|*.TXT|" + "All files (*.*)|*.*";
+                    // Pega o nome do arquivo para salvar
+                    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        escreveArquivo();
+                        // Atualiza a barra de status
+                        toolStripStatusLabel1.Text = saveFileDialog1.FileName;
+                        isSaved = true;
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erro : " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro : " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+           }
+           else if (isEditing) // se o arquivo ja foi salvo e houve alterações no text box, edita o arquivo com as novas alterações
+           {
+                editaArquivo();
+                isEditing = false;
+           }
+            // Limpa área de mensagens
+            textBox1.Text = "";
         }
 
+        private void escreveArquivo()
+        {
+            // abre um stream para escrita e cria um StreamWriter para implementar o stream
+            FileStream fs = new FileStream(saveFileDialog1.FileName, FileMode.OpenOrCreate, FileAccess.Write);
+            StreamWriter m_streamWriter = new StreamWriter(fs);
+            m_streamWriter.Flush();
+            // Escreve para o arquivo usando a classe StreamWriter
+            m_streamWriter.BaseStream.Seek(0, SeekOrigin.Begin);
+            // escreve no controle richtextbox
+            m_streamWriter.Write(richTextBox1.Text);
+            // fecha o arquivo
+            m_streamWriter.Flush();
+            m_streamWriter.Close();
+        }
+
+        private void editaArquivo()
+        {
+            // limpa o arquivo
+            FileStream fileStream = File.Open(toolStripStatusLabel1.Text, FileMode.Open);
+            fileStream.SetLength(0);
+            fileStream.Flush();
+            fileStream.Close(); 
+
+            // escreve conteúdo atual do textbox no arquivo
+            StreamWriter writer = new StreamWriter(File.OpenWrite(toolStripStatusLabel1.Text));
+            writer.Write(richTextBox1.Text);
+            writer.Close();
+        }
         private void AbrirArquivo()
         {
+            //  possibilitar a seleção de pasta / arquivo, carregar o arquivo selecionado no editor
+
             //define as propriedades do controle 
             //OpenFileDialog
             openFileDialog1.Multiselect = true;
@@ -208,6 +260,11 @@
                     }
                     // Fecha o stream
                     m_streamReader.Close();
+                    // Atualiza barra de status
+                    toolStripStatusLabel1.Text = openFileDialog1.FileName;
+                    // Limpar a área de mensagens
+                    textBox1.Text = "";
+                    isSaved = true;
                 }
                 catch (Exception ex)
                 {
@@ -230,9 +287,73 @@
                     case Keys.S:
                         salvarToolStripButton_Click(sender, e);
                         break;
+                    case Keys.C:
+                        copiarToolStripButton_Click(sender, e);
+                        break;
+                    case Keys.X:
+                        recortarToolStripButton_Click(sender, e);
+                        break;
                     default:
                         break;
                 }
+            
+            else if (e.KeyCode == Keys.F7)
+                compilarToolStripButton_Click(sender, e);
+            
+            else if (e.KeyCode == Keys.F1)
+                infoToolStripButton_Click(sender, e);
+
+        }
+
+        private void compilarToolStripButton_Click(object sender, EventArgs e)
+        {
+
+            textBox1.Text = "Compilação de programas ainda não foi implementada.";
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void infoToolStripButton_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = "Nome dos componentes da equipe: \n\r Felipe Franco Weber, \n\r Maria Eduarda Krutzsch, \n\r Marino Neto";
+        }
+
+        private void copiarToolStripButton_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectedText != "")
+            {
+                Clipboard.SetDataObject(richTextBox1.SelectedText);
+            }
+        }
+
+        private void colarToolStripButton_Click(object sender, EventArgs e)
+        {
+            // Declares an IDataObject to hold the data returned from the clipboard.
+            // Retrieves the data from the clipboard.
+            IDataObject iData = Clipboard.GetDataObject();
+
+            // Determines whether the data is in a format you can use.
+            if (iData.GetDataPresent(DataFormats.Text))
+            {
+                // Yes it is, so display it in a text box.
+                richTextBox1.Text += (String)iData.GetData(DataFormats.Text);
+                // move o cursor para o fim da linha onde o texto foi copiado
+                richTextBox1.SelectionStart = richTextBox1.Text.Length;
+                
+            }
+        }
+
+        private void recortarToolStripButton_Click(object sender, EventArgs e)
+        {
+            copiarToolStripButton_Click(sender, e);
+            richTextBox1.SelectedText = "";
+        }
+
+        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
