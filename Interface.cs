@@ -1,8 +1,8 @@
 ﻿namespace Interface
 {
-    public partial class Form2 : Form
+    public partial class Interface : Form
     {
-        public Form2()
+        public Interface()
         {
             InitializeComponent();
         }
@@ -133,6 +133,7 @@
 
             richTextBox1.Clear();
             richTextBox1.Focus();
+            toolStripStatusLabel1.Text = "pasta\\nome do arquivo";
         }
 
         private void ChamaSalvarArquivo()
@@ -177,8 +178,8 @@
         {
             //define as propriedades do controle 
             //OpenFileDialog
-            this.openFileDialog1.Multiselect = true;
-            this.openFileDialog1.Title = "Selecionar Arquivo";
+            openFileDialog1.Multiselect = true;
+            openFileDialog1.Title = "Selecionar Arquivo";
             openFileDialog1.InitialDirectory = @"C:\Dados\";
             //filtra para exibir somente arquivos textos
             openFileDialog1.Filter = "Texts (*.TXT)|*.TXT|" + "All files (*.*)|*.*";
@@ -217,7 +218,7 @@
 
         private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Control)
+            if (ModifierKeys == Keys.Control)
                 switch (e.KeyCode)
                 {
                     case Keys.N:
