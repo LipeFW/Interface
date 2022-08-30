@@ -1,16 +1,12 @@
-﻿using System.IO;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-
-namespace Interface
+﻿namespace Interface
 {
-    public partial class Form2 : Form
+    public partial class Interface : Form
     {
 
         private bool isSaved = false;
         private bool isEditing = false;
 
-        public Form2()
+        public Interface()
         {
             InitializeComponent();
         }
@@ -150,7 +146,7 @@ namespace Interface
             richTextBox1.Clear();
             richTextBox1.Focus();
             // Limpa barra de status
-            toolStripStatusLabel1.Text = "pasta/nome do arquivo";
+            toolStripStatusLabel1.Text = "pasta\\nome do arquivo";
             // Limpa área de mensagens
             textBox1.Text = "";
             isSaved = false;
@@ -234,8 +230,8 @@ namespace Interface
 
             //define as propriedades do controle 
             //OpenFileDialog
-            this.openFileDialog1.Multiselect = true;
-            this.openFileDialog1.Title = "Selecionar Arquivo";
+            openFileDialog1.Multiselect = true;
+            openFileDialog1.Title = "Selecionar Arquivo";
             openFileDialog1.InitialDirectory = @"C:\Dados\";
             //filtra para exibir somente arquivos textos
             openFileDialog1.Filter = "Texts (*.TXT)|*.TXT|" + "All files (*.*)|*.*";
@@ -279,7 +275,7 @@ namespace Interface
 
         private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Control)
+            if (ModifierKeys == Keys.Control)
                 switch (e.KeyCode)
                 {
                     case Keys.N:

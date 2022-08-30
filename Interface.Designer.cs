@@ -2,7 +2,7 @@
 
 namespace Interface
 {
-    partial class Form2
+    partial class Interface
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace Interface
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Interface));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.novaToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.abrirToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -45,7 +45,7 @@ namespace Interface
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.richTextBox1 = new Interface.Components.RichtTextBoxNoZoom();
+            this.richTextBox1 = new RichtTextBoxNoZoom();
             this.LineNumberTextBox = new System.Windows.Forms.RichTextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -79,13 +79,12 @@ namespace Interface
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.toolStrip1.Size = new System.Drawing.Size(900, 70);
-            this.toolStrip1.TabIndex = 0;
+            this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
             // 
             // novaToolStripButton
             // 
             this.novaToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("novaToolStripButton.Image")));
-            this.novaToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.novaToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.novaToolStripButton.Name = "novaToolStripButton";
             this.novaToolStripButton.Padding = new System.Windows.Forms.Padding(10);
@@ -94,20 +93,21 @@ namespace Interface
             this.novaToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.novaToolStripButton.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.novaToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.novaToolStripButton.ToolTipText = "novo [ctrl-n]";
             this.novaToolStripButton.Click += new System.EventHandler(this.novaToolStripButton_Click);
             // 
             // abrirToolStripButton
             // 
             this.abrirToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("abrirToolStripButton.Image")));
-            this.abrirToolStripButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.abrirToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.abrirToolStripButton.Name = "abrirToolStripButton";
             this.abrirToolStripButton.Padding = new System.Windows.Forms.Padding(10);
             this.abrirToolStripButton.Size = new System.Drawing.Size(95, 67);
             this.abrirToolStripButton.Text = "abrir [ctrl-o]";
             this.abrirToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.abrirToolStripButton.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.abrirToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.abrirToolStripButton.ToolTipText = "abrir";
+            this.abrirToolStripButton.ToolTipText = "abrir [ctrl-o]";
             this.abrirToolStripButton.Click += new System.EventHandler(this.abrirToolStripButton_Click);
             // 
             // salvarToolStripButton
@@ -119,11 +119,14 @@ namespace Interface
             this.salvarToolStripButton.Size = new System.Drawing.Size(99, 67);
             this.salvarToolStripButton.Text = "salvar [ctrl-s]";
             this.salvarToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.salvarToolStripButton.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.salvarToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.salvarToolStripButton.Click += new System.EventHandler(this.salvarToolStripButton_Click);
             // 
             // toolStripSeparator
             // 
+            this.toolStripSeparator.BackColor = System.Drawing.Color.Black;
+            this.toolStripSeparator.ForeColor = System.Drawing.Color.Black;
             this.toolStripSeparator.Name = "toolStripSeparator";
             this.toolStripSeparator.Padding = new System.Windows.Forms.Padding(10);
             this.toolStripSeparator.Size = new System.Drawing.Size(6, 70);
@@ -137,6 +140,7 @@ namespace Interface
             this.copiarToolStripButton.Size = new System.Drawing.Size(103, 67);
             this.copiarToolStripButton.Text = "copiar [ctrl-c]";
             this.copiarToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.copiarToolStripButton.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.copiarToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.copiarToolStripButton.Click += new System.EventHandler(this.copiarToolStripButton_Click);
             // 
@@ -149,6 +153,7 @@ namespace Interface
             this.colarToolStripButton.Size = new System.Drawing.Size(96, 67);
             this.colarToolStripButton.Text = "colar [ctrl-v]";
             this.colarToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.colarToolStripButton.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.colarToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.colarToolStripButton.Click += new System.EventHandler(this.colarToolStripButton_Click);
             // 
@@ -161,11 +166,14 @@ namespace Interface
             this.recortarToolStripButton.Size = new System.Drawing.Size(111, 67);
             this.recortarToolStripButton.Text = "recortar [ctrl-x]";
             this.recortarToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.recortarToolStripButton.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.recortarToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.recortarToolStripButton.Click += new System.EventHandler(this.recortarToolStripButton_Click);
             // 
             // toolStripSeparator1
             // 
+            this.toolStripSeparator1.BackColor = System.Drawing.Color.Black;
+            this.toolStripSeparator1.ForeColor = System.Drawing.Color.Black;
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Padding = new System.Windows.Forms.Padding(10);
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 70);
@@ -179,6 +187,7 @@ namespace Interface
             this.compilarToolStripButton.Size = new System.Drawing.Size(101, 67);
             this.compilarToolStripButton.Text = "compilar [F7]";
             this.compilarToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.compilarToolStripButton.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.compilarToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.compilarToolStripButton.Click += new System.EventHandler(this.compilarToolStripButton_Click);
             // 
@@ -191,6 +200,7 @@ namespace Interface
             this.infoToolStripButton.Size = new System.Drawing.Size(90, 67);
             this.infoToolStripButton.Text = "equipe [F1]";
             this.infoToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.infoToolStripButton.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.infoToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.infoToolStripButton.Click += new System.EventHandler(this.infoToolStripButton_Click);
             // 
@@ -252,14 +262,15 @@ namespace Interface
             // LineNumberTextBox
             // 
             this.LineNumberTextBox.BackColor = System.Drawing.Color.White;
-            this.LineNumberTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LineNumberTextBox.Dock = System.Windows.Forms.DockStyle.Left;
+            this.LineNumberTextBox.Enabled = false;
             this.LineNumberTextBox.ForeColor = System.Drawing.Color.Black;
             this.LineNumberTextBox.Location = new System.Drawing.Point(0, 0);
             this.LineNumberTextBox.Name = "LineNumberTextBox";
             this.LineNumberTextBox.ReadOnly = true;
             this.LineNumberTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.LineNumberTextBox.Size = new System.Drawing.Size(34, 293);
+            this.LineNumberTextBox.ShortcutsEnabled = false;
+            this.LineNumberTextBox.Size = new System.Drawing.Size(34, 205);
             this.LineNumberTextBox.TabIndex = 0;
             this.LineNumberTextBox.Text = "";
             this.LineNumberTextBox.WordWrap = false;
@@ -268,7 +279,6 @@ namespace Interface
             // textBox1
             // 
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Enabled = false;
             this.textBox1.Location = new System.Drawing.Point(0, 0);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
@@ -283,7 +293,7 @@ namespace Interface
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // Form2
+            // Interface
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -292,7 +302,7 @@ namespace Interface
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
             this.MinimumSize = new System.Drawing.Size(910, 600);
-            this.Name = "Form2";
+            this.Name = "Interface";
             this.ShowIcon = false;
             this.Text = "Interface";
             this.Load += new System.EventHandler(this.Form2_Load);
