@@ -148,7 +148,7 @@
             richTextBox1.Clear();
             richTextBox1.Focus();
             // Limpa barra de status
-            toolStripStatusLabel1.Text = "pasta\\nome do arquivo";
+            toolStripStatusLabel1.Text = "";
             // Limpa área de mensagens
             textBox1.Text = "";
             isSaved = false;
