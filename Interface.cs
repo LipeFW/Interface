@@ -137,13 +137,6 @@
                     Salvar_Arquivo();
                 }
             }
-            else if (isEditing)
-            {
-                if ((MessageBox.Show("Você tem modificações não salvas. Deseja salvar as alterações?", "Salvar Arquivo", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes))
-                {
-                    editaArquivo();
-                }
-            }
             // Limpa o editor
             richTextBox1.Clear();
             richTextBox1.Focus();
