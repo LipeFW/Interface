@@ -1,4 +1,4 @@
-﻿namespace Interface.Components
+﻿namespace Components
 {
     public class RichtTextBoxNoZoom : RichTextBox
     {
