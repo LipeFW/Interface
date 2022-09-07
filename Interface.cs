@@ -1,4 +1,6 @@
-﻿namespace Interface
+﻿using Interface.GALS;
+
+namespace Interface
 {
     public partial class Interface : Form
     {
@@ -284,12 +286,40 @@
 
         private void compilarToolStripButton_Click(object sender, EventArgs e)
         {
+            Lexico lexico = new Lexico();
+            lexico.setInput(richTextBox1.Text);
+            try
+            {
+                Token t = null;
+                var retorno = "";
+                while ((t = lexico.nextToken()) != null)
+                {
+                    retorno += (Enum.GetName(typeof(EnumConstants), t.Id) + " - " + t.Position)+"\r\n";
 
-            textBox1.Text = "Compilação de programas ainda não foi implementada.";
-        }
+                    // só escreve o lexema, necessário escrever t.getId, t.getPosition()
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
+                    // t.getId () - retorna o identificador da classe. Olhar Constants.java e adaptar, pois 
+                    // deve ser apresentada a classe por extenso
+                    // t.getPosition () - retorna a posição inicial do lexema no editor, necessário adaptar 
+                    // para mostrar a linha
+                    // 	
+                    // esse código apresenta os tokens enquanto não ocorrer erro
+                    // no entanto, os tokens devem ser apresentados SÓ se não ocorrer erro, necessário adaptar 
+                    // para atender o que foi solicitado		   
+                }
+                textBox1.Text = retorno;
+            }
+            catch (LexicalError lexicalError)
+            {  // tratamento de erros
+                Console.WriteLine(lexicalError.Message + " em " + lexicalError.Position);
+
+                textBox1.Text = lexicalError.Message + " em " + lexicalError.Position;
+
+                // e.getMessage() - retorna a mensagem de erro de SCANNER_ERRO (olhar ScannerConstants.java 
+                // e adaptar conforme o enunciado da parte 2)
+                // e.getPosition() - retorna a posição inicial do erro, tem que adaptar para mostrar a 
+                // linha  
+            }
         }
 
         private void infoToolStripButton_Click(object sender, EventArgs e)
