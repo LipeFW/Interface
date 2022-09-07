@@ -291,10 +291,10 @@ namespace Interface
             try
             {
                 Token t = null;
-                var retorno = "";
+                var retorno = "| linha | classe | lexema |";
                 while ((t = lexico.nextToken()) != null)
                 {
-                    retorno += (Enum.GetName(typeof(EnumConstants), t.Id) + " - " + t.Position)+"\r\n";
+                    retorno += $"\r\n| {t.Line}       | {(Enum.GetName(typeof(EnumConstants), t.Id))} | {t.Lexeme} |";
 
                     // só escreve o lexema, necessário escrever t.getId, t.getPosition()
 

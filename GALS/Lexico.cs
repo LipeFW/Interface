@@ -4,6 +4,8 @@
     {
         private int Position { get; set; }
         private string Input;
+        private int line { get; set; } = 1;
+        private bool isNextLine = false;
 
         public Lexico()
         {
@@ -32,7 +34,6 @@
                 return null;
 
             int start = Position;
-
             int state = 0;
             int lastState = 0;
             int endState = -1;
@@ -40,7 +41,21 @@
 
             while (hasInput())
             {
+                if (isNextLine)
+                { 
+                    line++;
+                    isNextLine = false;
+                }
+
                 lastState = state;
+
+                if (validateChar() == '\n')
+                {
+                    isNextLine = true;
+                    Position++;
+                    break;
+                }
+
                 state = nextState(nextChar(), state);
 
                 if (state < 0)
@@ -58,7 +73,8 @@
             if (endState < 0 || (endState != state && tokenForState(lastState) == -2))
                 throw new LexicalError(SCANNER_ERROR[lastState], start);
 
-            Position = end;
+            if(!isNextLine)
+                Position = end;
 
             int token = tokenForState(endState);
 
@@ -69,7 +85,7 @@
                 var lenght = end - start;
                 string lexeme = Input.Substring(start, lenght);
                 token = lookupToken(token, lexeme);
-                return new Token(token, lexeme, start);
+                return new Token(token, lexeme, start, line);
             }
         }
 
@@ -131,6 +147,17 @@
         {
             if (hasInput())
                 return Input[Position++];
+            else
+            {
+                var aux = -1;
+                return (char)aux;
+            }
+        }
+
+        private char validateChar()
+        {
+            if (hasInput())
+                return Input[Position];
             else
             {
                 var aux = -1;
