@@ -1,5 +1,4 @@
-﻿using EnumsNET;
-using Interface.GALS;
+﻿using Interface.GALS;
 using Interface.Utils;
 
 namespace Interface

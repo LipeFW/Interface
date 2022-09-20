@@ -69,7 +69,7 @@
             if (endState < 0 || (endState != state && tokenForState(lastState) == -2))
                 throw new LexicalError(SCANNER_ERROR[lastState], start);
 
-            if(!isNextLine)
+            if (!isNextLine)
                 Position = end;
 
             int token = tokenForState(endState);
