@@ -42,7 +42,7 @@
             while (hasInput())
             {
                 if (isNextLine)
-                { 
+                {
                     line++;
                     isNextLine = false;
                 }
@@ -50,11 +50,7 @@
                 lastState = state;
 
                 if (validateChar() == '\n')
-                {
                     isNextLine = true;
-                    Position++;
-                    break;
-                }
 
                 state = nextState(nextChar(), state);
 

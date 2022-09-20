@@ -1,4 +1,6 @@
-﻿using Interface.GALS;
+﻿using EnumsNET;
+using Interface.GALS;
+using Interface.Utils;
 
 namespace Interface
 {
@@ -288,13 +290,13 @@ namespace Interface
         {
             Lexico lexico = new Lexico();
             lexico.setInput(richTextBox1.Text);
+            Token t = null;
             try
             {
-                Token t = null;
                 var retorno = "| linha | classe | lexema |";
                 while ((t = lexico.nextToken()) != null)
                 {
-                    retorno += $"\r\n| {t.Line}       | {(Enum.GetName(typeof(EnumConstants), t.Id))} | {t.Lexeme} |";
+                    retorno += $"\r\n| {t.Line}       | {EnumHelper.GetDescription((EnumConstants)t.Id)} | {t.Lexeme} |";
 
                     // só escreve o lexema, necessário escrever t.getId, t.getPosition()
 
@@ -310,10 +312,9 @@ namespace Interface
                 textBox1.Text = retorno;
             }
             catch (LexicalError lexicalError)
-            {  // tratamento de erros
-                Console.WriteLine(lexicalError.Message + " em " + lexicalError.Position);
-
-                textBox1.Text = lexicalError.Message + " em " + lexicalError.Position;
+            {
+                // tratamento de erros
+                textBox1.Text = $"Erro na linha: {(t == null ? "1" : t.Line)} - {lexicalError.Message}";
 
                 // e.getMessage() - retorna a mensagem de erro de SCANNER_ERRO (olhar ScannerConstants.java 
                 // e adaptar conforme o enunciado da parte 2)
