@@ -308,12 +308,14 @@ namespace Interface
                     // no entanto, os tokens devem ser apresentados SÓ se não ocorrer erro, necessário adaptar 
                     // para atender o que foi solicitado		   
                 }
+
+                retorno += $"\r\n\r\nPrograma compilado com sucesso";
                 textBox1.Text = retorno;
             }
             catch (LexicalError lexicalError)
             {
                 // tratamento de erros
-                textBox1.Text = $"Erro na linha: {(t == null ? "1" : t.Line)} - {lexicalError.Message}";
+                textBox1.Text = $"Erro na linha: {lexicalError.Line} - {lexicalError.Message}";
 
                 // e.getMessage() - retorna a mensagem de erro de SCANNER_ERRO (olhar ScannerConstants.java 
                 // e adaptar conforme o enunciado da parte 2)
