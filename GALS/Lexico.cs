@@ -67,7 +67,7 @@
                 }
             }
             if (endState < 0 || (endState != state && tokenForState(lastState) == -2))
-                if(lastState == 0)
+                if (lastState == 0)
                     throw new LexicalError($"{Input[--Position]} {SCANNER_ERROR[lastState]}", start, line);
                 else
                     throw new LexicalError($"{SCANNER_ERROR[lastState]}", start, line);
