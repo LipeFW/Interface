@@ -290,6 +290,10 @@ namespace Interface
             Lexico lexico = new Lexico();
             lexico.setInput(richTextBox1.Text);
             Token t = null;
+
+            Sintatico sintatico = new Sintatico();
+            Semantico semantico = new Semantico();
+
             try
             {
                 var retorno = "| linha | classe | lexema |";
