@@ -1,5 +1,4 @@
-﻿using Interface.GALS;
-using System.Collections;
+﻿using System.Collections;
 
 namespace Interface.GALS
 {
@@ -11,20 +10,14 @@ namespace Interface.GALS
         private Lexico scanner;
         private Semantico semanticAnalyser;
 
-        private static bool isTerminal(int x)
-        {
-            return x < FIRST_NON_TERMINAL;
-        }
+        private static bool isTerminal(int x) =>
+            x < FIRST_NON_TERMINAL;
 
-        private static bool isNonTerminal(int x)
-        {
-            return x >= FIRST_NON_TERMINAL && x < FIRST_SEMANTIC_ACTION;
-        }
+        private static bool isNonTerminal(int x) =>
+            x >= FIRST_NON_TERMINAL && x < FIRST_SEMANTIC_ACTION;
 
-        private static bool isSemanticAction(int x)
-        {
-            return x >= FIRST_SEMANTIC_ACTION;
-        }
+        private static bool isSemanticAction(int x) =>
+            x >= FIRST_SEMANTIC_ACTION;
 
         private bool step()
         {
@@ -32,13 +25,13 @@ namespace Interface.GALS
             {
                 int pos = 0;
                 if (previousToken != null)
-                    pos = previousToken.getPosition() + previousToken.getLexeme().length();
+                    pos = previousToken.Position + previousToken.Lexeme.Length;
 
-                currentToken = new Token(DOLLAR, "$", pos);
+                currentToken = new Token(DOLLAR, "$", pos, previousToken.Line);
             }
 
-            int x = ((Integer)stack.pop()).intValue();
-            int a = currentToken.getId();
+            int x = (int)stack.Pop();
+            int a = currentToken.Id;
 
             if (x == EPSILON)
             {
@@ -48,7 +41,7 @@ namespace Interface.GALS
             {
                 if (x == a)
                 {
-                    if (stack.empty())
+                    if (stack.Count == 0)
                         return true;
                     else
                     {
@@ -59,7 +52,7 @@ namespace Interface.GALS
                 }
                 else
                 {
-                    throw new SyntaticError(PARSER_ERROR[x], currentToken.getPosition());
+                    throw new SyntaticError(PARSER_ERROR[x], currentToken.Position, currentToken.Line);
                 }
             }
             else if (isNonTerminal(x))
@@ -67,7 +60,7 @@ namespace Interface.GALS
                 if (pushProduction(x, a))
                     return false;
                 else
-                    throw new SyntaticError(PARSER_ERROR[x], currentToken.getPosition());
+                    throw new SyntaticError(PARSER_ERROR[x], currentToken.Position, currentToken.Line);
             }
             else // isSemanticAction(x)
             {
@@ -78,14 +71,14 @@ namespace Interface.GALS
 
         private bool pushProduction(int topStack, int tokenInput)
         {
-            int p = PARSER_TABLE[topStack - FIRST_NON_TERMINAL][tokenInput - 1];
+            int p = PARSER_TABLE[topStack - FIRST_NON_TERMINAL, tokenInput - 1];
             if (p >= 0)
             {
                 int[] production = PRODUCTIONS[p];
                 //empilha a produção em ordem reversa
-                for (int i = production.length - 1; i >= 0; i--)
+                for (int i = production.Length - 1; i >= 0; i--)
                 {
-                    stack.push(new Integer(production[i]));
+                    stack.Push(production[i]);
                 }
                 return true;
             }
@@ -98,13 +91,16 @@ namespace Interface.GALS
             this.scanner = scanner;
             this.semanticAnalyser = semanticAnalyser;
 
-            stack.clear();
-            stack.push(new Integer(DOLLAR));
-            stack.push(new Integer(START_SYMBOL));
+            stack.Clear();
+            stack.Push(DOLLAR);
+            stack.Push(START_SYMBOL);
 
             currentToken = scanner.nextToken();
 
             while (!step()) ;
         }
+
+        public Token getToken() =>
+            currentToken;
     }
 }

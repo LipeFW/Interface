@@ -15,6 +15,13 @@
             Line = line;
         }
 
+        public Token(int id, string lexeme, int position)
+        {
+            Id = id;
+            Lexeme = lexeme;
+            Position = position;
+        }
+
         public string toString()
         {
             return Id + " ( " + Lexeme + " ) @ " + Position;
