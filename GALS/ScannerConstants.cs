@@ -1,6 +1,6 @@
 ﻿namespace Interface.GALS
 {
-    public class ScannerConstants
+    public class ScannerConstants : ParserConstants
     {
         public int[] SCANNER_TABLE_INDEXES =
         {

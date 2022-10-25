@@ -288,33 +288,17 @@ namespace Interface
         private void compilarToolStripButton_Click(object sender, EventArgs e)
         {
             Lexico lexico = new Lexico();
-            lexico.setInput(richTextBox1.Text);
-            Token t = null;
-
             Sintatico sintatico = new Sintatico();
             Semantico semantico = new Semantico();
 
+            lexico.setInput(richTextBox1.Text);
+
+            Token t = null;
+
             try
             {
-                var retorno = "| linha | classe | lexema |";
-                while ((t = lexico.nextToken()) != null)
-                {
-                    retorno += $"\r\n| {t.Line}       | {EnumHelper.GetDescription((EnumConstants)t.Id)} | {t.Lexeme} |";
-
-                    // só escreve o lexema, necessário escrever t.getId, t.getPosition()
-
-                    // t.getId () - retorna o identificador da classe. Olhar Constants.java e adaptar, pois 
-                    // deve ser apresentada a classe por extenso
-                    // t.getPosition () - retorna a posição inicial do lexema no editor, necessário adaptar 
-                    // para mostrar a linha
-                    // 	
-                    // esse código apresenta os tokens enquanto não ocorrer erro
-                    // no entanto, os tokens devem ser apresentados SÓ se não ocorrer erro, necessário adaptar 
-                    // para atender o que foi solicitado		   
-                }
-
-                retorno += $"\r\n\r\nPrograma compilado com sucesso";
-                textBox1.Text = retorno;
+                sintatico.parse(lexico, semantico);
+                textBox1.Text = "programa compilado com sucesso";
             }
             catch (LexicalError lexicalError)
             {
@@ -325,6 +309,19 @@ namespace Interface
                 // e adaptar conforme o enunciado da parte 2)
                 // e.getPosition() - retorna a posição inicial do erro, tem que adaptar para mostrar a 
                 // linha  
+            }
+            catch (SyntaticError syntaticError)
+            {
+                textBox1.Text = $"Erro na linha: {syntaticError.Line} - encontrado {sintatico.getToken().Lexeme} {syntaticError.Message}";
+
+                //Trata erros sintáticos
+                //linha 				sugestão: converter getPosition em linha
+                //símbolo encontrado    sugestão: implementar um método getToken no sintatico
+                //mensagem - símbolos esperados,   alterar ParserConstants.java, String[] PARSER_ERROR		
+            }
+            catch (SemanticError semanticError)
+            {
+                //Trata erros semânticos
             }
         }
 
