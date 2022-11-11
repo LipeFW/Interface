@@ -1,5 +1,5 @@
-﻿using Interface.GALS;
-using Interface.Utils;
+﻿using Interface.Components;
+using Interface.GALS;
 
 namespace Interface
 {
@@ -12,6 +12,7 @@ namespace Interface
         public Interface()
         {
             InitializeComponent();
+            Console.SetOut(new ControlWriter(textBox1));
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -297,8 +298,8 @@ namespace Interface
 
             try
             {
+                textBox1.Text = "";
                 sintatico.parse(lexico, semantico);
-                textBox1.Text = "programa compilado com sucesso";
             }
             catch (LexicalError lexicalError)
             {
@@ -321,7 +322,9 @@ namespace Interface
             }
             catch (SemanticError semanticError)
             {
-                //Trata erros semânticos
+                //conferir linha!!!!!!
+                textBox1.Text = $"Erro na linha: {semanticError.Line} - {semanticError.Message}";
+
             }
         }
 
@@ -356,6 +359,11 @@ namespace Interface
         {
             copiarToolStripButton_Click(sender, e);
             richTextBox1.SelectedText = "";
+        }
+
+        public void escreveSaida(string text)
+        {
+            textBox1.Text = text;
         }
     }
 }
