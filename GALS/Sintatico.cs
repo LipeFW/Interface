@@ -62,11 +62,12 @@ namespace Interface.GALS
                 else
                     throw new SyntaticError(PARSER_ERROR[x], currentToken.Position, currentToken.Line);
             }
-            else // isSemanticAction(x)
+            else if (isSemanticAction(x))
             {
                 semanticAnalyser.executeAction(x - FIRST_SEMANTIC_ACTION, previousToken);
                 return false;
             }
+            return false;
         }
 
         private bool pushProduction(int topStack, int tokenInput)
