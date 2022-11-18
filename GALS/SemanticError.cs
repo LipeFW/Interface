@@ -6,7 +6,7 @@
         {
         }
 
-        public SemanticError(string msg, int position, int line = 0) : base(msg, position, line)
+        public SemanticError(string msg, int position = 0, int line = 0) : base(msg, position, line)
         {
         }
     }

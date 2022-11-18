@@ -8,7 +8,7 @@ namespace Interface
 
         private bool isSaved = false;
         private bool isEditing = false;
-        private string codigoIl;
+        public static string saveDirectory;
 
         public Interface()
         {
@@ -189,6 +189,7 @@ namespace Interface
             m_streamWriter.BaseStream.Seek(0, SeekOrigin.Begin);
             // escreve no controle richtextbox
             m_streamWriter.Write(richTextBox1.Text);
+            saveDirectory = fs.Name;
             // fecha o arquivo
             m_streamWriter.Flush();
             m_streamWriter.Close();
@@ -295,8 +296,6 @@ namespace Interface
             Semantico semantico = new Semantico();
 
             lexico.setInput(richTextBox1.Text);
-
-            Token t = null;
 
             try
             {

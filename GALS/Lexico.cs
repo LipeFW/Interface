@@ -9,7 +9,7 @@
 
         public Lexico()
         {
-            new Lexico("");
+            Input = "";
         }
 
         public Lexico(string input)

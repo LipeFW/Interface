@@ -15,7 +15,7 @@ namespace Interface.Components
             TextBox.Text += value;
         }
 
-        public override void Write(string value)
+        public override void Write(string? value)
         {
             TextBox.Text += value;
         }

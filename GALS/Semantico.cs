@@ -1,17 +1,17 @@
-﻿using System;
-using System.Text;
-
-namespace Interface.GALS
+﻿namespace Interface.GALS
 {
     public class Semantico : Constants
     {
         public string Operador { get; set; }
         public string Codigo { get; set; }
         public Stack<Type> PilhaTipos { get; set; }
+        public int Line { get; set; }
 
         public Semantico()
         {
             PilhaTipos = new Stack<Type>();
+            Operador = "";
+            Codigo = "";
         }
 
         public void executeAction(int action, Token token)
@@ -111,6 +111,8 @@ namespace Interface.GALS
             }
 
             Console.WriteLine($"#{action}" + (token != null ? $" (token: {token?.Lexeme})" : ""));
+
+            File.WriteAllText($"{Interface.saveDirectory}.txt", Codigo);
         }
 
         // feito ?
@@ -118,25 +120,30 @@ namespace Interface.GALS
         {
             PilhaTipos.Push(typeof(string));
             Codigo += "\nldstr " + token.Lexeme;
+
+            Line = token.Line;
         }
 
-         // feito ?
+        // feito ?
         private void ActionVinteUm(Token token)
         {
             // constantes do tipo char da linguagem fonte (\n, \s, \t) equivalem a constantes
             // do tipo string em IL ("\n", " ", "\t", respectivamente)
             PilhaTipos.Push(typeof(char));
+
             if (token.Lexeme == "\n")
+            {
                 Codigo += "ldstr \"\n\"";
-            else if (token.Lexeme == "\s")
+                Line++;
+            }
+            else if (token.Lexeme == "\\s")
                 Codigo += "ldstr \" \" ";
             else if (token.Lexeme == "\t")
-                Codigo += "ldstr \"\s\"";
-            else 
+                Codigo += "ldstr \"\\t\"";
+            else
                 Codigo += "\nldstr " + token.Lexeme;
 
-            // PilhaTipos.Push(typeof(char));
-            // Codigo += "\nldstr " + token.Lexeme;
+            Line = token.Line;
         }
 
         // feito
@@ -144,7 +151,7 @@ namespace Interface.GALS
         {
             // ambos os tipos devem ser inteiros para divisão inteira
             var tipo1 = PilhaTipos.Pop();
-            var tipo2 = PilhaTipos.Pop();    
+            var tipo2 = PilhaTipos.Pop();
             if (tipo1 == typeof(int) && tipo2 == typeof(int))
             {
                 PilhaTipos.Push(typeof(int));
@@ -152,16 +159,16 @@ namespace Interface.GALS
             else
             {
                 //exibir na caixa de mensagens com linha
-                throw new SemanticError("tipos incompatíveis em expressão aritmética.");
+                throw new SemanticError("tipos incompatíveis em expressão aritmética.", line: Line);
             }
-            Codigo += "\nor";  
+            Codigo += "\nor";
         }
 
         // feito
         private void ActionDezenove()
         {
             var tipo1 = PilhaTipos.Pop();
-            var tipo2 = PilhaTipos.Pop();    
+            var tipo2 = PilhaTipos.Pop();
             if (tipo1 == typeof(bool) && tipo2 == typeof(bool))
             {
                 PilhaTipos.Push(typeof(bool));
@@ -169,17 +176,17 @@ namespace Interface.GALS
             else
             {
                 //exibir na caixa de mensagens com linha
-                throw new SemanticError("tipos incompatíveis em expressão lógica.");
+                throw new SemanticError("tipos incompatíveis em expressão lógica.", line: Line);
             }
-            Codigo += "\nor";  
+            Codigo += "\nor";
         }
 
-        
+
         // feito
         private void ActionDezoito()
         {
             var tipo1 = PilhaTipos.Pop();
-            var tipo2 = PilhaTipos.Pop();    
+            var tipo2 = PilhaTipos.Pop();
             if (tipo1 == typeof(bool) && tipo2 == typeof(bool))
             {
                 PilhaTipos.Push(typeof(bool));
@@ -187,7 +194,7 @@ namespace Interface.GALS
             else
             {
                 //exibir na caixa de mensagens com linha
-                throw new SemanticError("tipos incompatíveis em expressão lógica.");
+                throw new SemanticError("tipos incompatíveis em expressão lógica.", line: Line);
             }
             Codigo += "\nand";
         }
@@ -200,7 +207,7 @@ namespace Interface.GALS
             Codigo += "ldstr \"\n\"";
             Codigo += "\ncall void [mscorlib]System.Console::Write(string)";
         }
-        
+
         // feito
         private void ActionDezesseis()
         {
@@ -221,7 +228,7 @@ namespace Interface.GALS
                 Codigo += "\nconv.i8";
 
             if (tipo == typeof(char))
-                 
+                Codigo += "\ncall void [mscorlib]System.Console::Write(string)";
             else if (tipo == typeof(string))
                 Codigo += "\ncall void [mscorlib]System.Console::Write(string)";
             else if (tipo == typeof(bool))
@@ -232,7 +239,6 @@ namespace Interface.GALS
                 Codigo += "\ncall void [mscorlib]System.Console::Write(float64)";
         }
 
-        
         // feito
         private void ActionTreze()
         {
@@ -240,11 +246,11 @@ namespace Interface.GALS
             if (tipo == typeof(bool))
                 PilhaTipos.Push(typeof(bool));
             else
-                throw new SemanticError("tipo incompatível em expressão lógica.");
+                throw new SemanticError("tipo incompatível em expressão lógica.", line: Line);
             Codigo += "ldc.i4.1";
             Codigo += "xor";
         }
-        
+
         // feito
         private void ActionDoze()
         {
@@ -259,7 +265,7 @@ namespace Interface.GALS
             Codigo += "ldc.i4.1";
         }
 
-        
+
         // pegar o trabalho de tcc q foi mencionado no "3o aula - semantico.pdf"
         // página 50 tem um exemplo de !=
         private void ActionDez()
@@ -270,9 +276,9 @@ namespace Interface.GALS
             if (tipo1 == tipo2)
                 PilhaTipos.Push(typeof(bool));
             else
-                throw new SemanticError("tipos incompatíveis em expressão relacional");
+                throw new SemanticError("tipos incompatíveis em expressão relacional", line: Line);
 
-            switch(Operador)
+            switch (Operador)
             {
                 case (">"):
                     Codigo += "\ncgt";
@@ -285,7 +291,8 @@ namespace Interface.GALS
                     break;
                 case ("!="):
                     Codigo += "\nldc.i4 0";
-                    Codigo += "\nceq"
+                    Codigo += "\nceq";
+                    break;
                 default: break;
             }
         }
@@ -294,6 +301,8 @@ namespace Interface.GALS
         private void ActionNove(Token token)
         {
             Operador = token.Lexeme;
+
+            Line = token.Line;
         }
 
         // feito
@@ -302,16 +311,16 @@ namespace Interface.GALS
             var tipo = PilhaTipos.Pop();
             if (tipo == typeof(float))
             {
-                PilhaTipos.Push(typeof(float);
+                PilhaTipos.Push(typeof(float));
             }
             else if (tipo == typeof(int))
-            { 
+            {
                 PilhaTipos.Push(typeof(int));
             }
             else
             {
                 //exibir na caixa de mensagens
-                throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética");
+                throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética", line: Line);
             }
             Codigo += "\nldc.i8 -1";
             Codigo += "\nconv.r8";
@@ -324,32 +333,61 @@ namespace Interface.GALS
             var tipo = PilhaTipos.Pop();
             if (tipo == typeof(float))
             {
-                PilhaTipos.Push(typeof(float);
+                PilhaTipos.Push(typeof(float));
             }
             else if (tipo == typeof(int))
-            { 
+            {
                 PilhaTipos.Push(typeof(int));
             }
             else
             {
                 //exibir na caixa de mensagens
-                throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética");
+                throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética", line: Line);
             }
         }
 
-        // CONFERIR
+        // CONFERIR COM A JOYCE
         private void ActionSeis(Token token)
-        { 
-            PilhaTipos.Push(typeof(float))
-            Codigo += "\nldc.r8" + token.Lexeme;
+        {
+            PilhaTipos.Push(typeof(float));
+
+            token.Lexeme = token.Lexeme.Replace(".", "0,");
+
+            if (token.Lexeme.Contains("d"))
+            {
+                var arraystr = token.Lexeme.Split("d");
+                var numeroDpsDoD = double.Parse(arraystr[1].Substring(0, 1));
+                var result = (decimal)Math.Pow(10, numeroDpsDoD);
+                var aaaa = decimal.Parse(arraystr[0]) * result;
+                var resultadoFinal = decimal.Parse(aaaa + arraystr[1].Substring(arraystr[1].IndexOf("d") + 2));
+
+                Codigo += "\nldc.r8 " + resultadoFinal;
+            }
+            else
+                Codigo += "\nldc.r8 " + token.Lexeme;
+
+            Line = token.Line;
         }
 
-        // CONFERIR
+        // CONFERIDO
         private void ActionCinco(Token token)
         {
             PilhaTipos.Push(typeof(int));
-            Codigo += "\nldc.i8 "+ token.Lexeme;
+
+            if (token.Lexeme.Contains("d"))
+            {
+                var arraystr = token.Lexeme.Split("d");
+                var numeroDpsDoD = int.Parse(arraystr[1].Substring(0, 1));
+                var result = Math.Pow(10, numeroDpsDoD);
+                var resultadoFinal = (int.Parse(arraystr[0]) * result).ToString() + arraystr[1].Substring(arraystr[1].IndexOf("d") + 2);
+
+                Codigo += "\nldc.i8 " + resultadoFinal;
+            }
+            else
+                Codigo += "\nldc.i8 " + token.Lexeme;
+
             Codigo += "\nconv.r8";
+            Line = token.Line;
         }
 
         // feito
@@ -370,7 +408,7 @@ namespace Interface.GALS
             else
             {
                 //exibir na caixa de mensagens
-                throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética");
+                throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética", line: Line);
             }
 
             Codigo += "div";
@@ -381,8 +419,7 @@ namespace Interface.GALS
         {
             var tipo1 = PilhaTipos.Pop();
             var tipo2 = PilhaTipos.Pop();
-            var tipo1 = PilhaTipos.Pop();
-            var tipo2 = PilhaTipos.Pop();
+
             if (tipo1 == typeof(float) && (tipo2 == typeof(float)))
             {
                 PilhaTipos.Push(typeof(float));
@@ -402,7 +439,7 @@ namespace Interface.GALS
             else
             {
                 //exibir na caixa de mensagens
-                throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética");
+                throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética", line: Line);
             }
 
             Codigo += "mul";
@@ -432,7 +469,7 @@ namespace Interface.GALS
             else
             {
                 //exibir na caixa de mensagens
-                throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética");
+                throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética", line: Line);
             }
 
             Codigo += "\nsub";
@@ -463,7 +500,7 @@ namespace Interface.GALS
             else
             {
                 //exibir na caixa de mensagens
-                throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética");
+                throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética", line: Line);
             }
 
             Codigo += "\nadd";
