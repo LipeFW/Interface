@@ -112,7 +112,8 @@
 
             Console.WriteLine($"#{action}" + (token != null ? $" (token: {token?.Lexeme})" : ""));
 
-            File.WriteAllText($"{Interface.saveDirectory}.txt", Codigo);
+            // lançando exceção se o arquivo n estiver salvo, verificar
+            File.WriteAllText($"{Interface.saveDirectory.Split(".txt")[0]}.il", Codigo);
         }
 
         // feito ?
@@ -356,7 +357,7 @@
             if (token.Lexeme.Contains("d"))
             {
                 var arraystr = token.Lexeme.Split("d");
-                var numeroDpsDoD = double.Parse(arraystr[1].Substring(0, 1));
+                var numeroDpsDoD = double.Parse(arraystr[1]);
                 var result = (decimal)Math.Pow(10, numeroDpsDoD);
                 var aaaa = decimal.Parse(arraystr[0]) * result;
                 var resultadoFinal = decimal.Parse(aaaa + arraystr[1].Substring(arraystr[1].IndexOf("d") + 2));
@@ -377,7 +378,7 @@
             if (token.Lexeme.Contains("d"))
             {
                 var arraystr = token.Lexeme.Split("d");
-                var numeroDpsDoD = int.Parse(arraystr[1].Substring(0, 1));
+                var numeroDpsDoD = int.Parse(arraystr[1]);
                 var result = Math.Pow(10, numeroDpsDoD);
                 var resultadoFinal = (int.Parse(arraystr[0]) * result).ToString() + arraystr[1].Substring(arraystr[1].IndexOf("d") + 2);
 
