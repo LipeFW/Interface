@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
 
 namespace Interface.GALS
 {
@@ -6,22 +6,25 @@ namespace Interface.GALS
     {
         public string Operador { get; set; }
         public string Codigo { get; set; }
-        public Stack<Type> PilhaTipos { get; set; }
+        public Stack<string> PilhaTipos { get; set; }
         public int Line { get; set; }
         public string TipoVar { get; set; }
-        public List<string> listaIdentificadores { get; set; } // ??????????
+        public List<string> ListaIdentificadores { get; set; } // ??????????
+        public Dictionary<string, string> TabelaSimbolos { get; set; }
         // CRIAR TABELA DE SÍMBOLOS
         // CRIAR UM MAPA EM C# -> Map<string,string> onde o primeiro string é identificador e o segundo string é o tipo
 
         // tabela de símbolos, usada para armazenar os identificadores e respecitivos tipos, conforme
-		// declaração de variáveis
-
+        // declaração de variáveis
 
         public Semantico()
         {
-            PilhaTipos = new Stack<Type>();
+            PilhaTipos = new Stack<string>();
             Operador = "";
             Codigo = "";
+            TipoVar = "";
+            ListaIdentificadores = new List<string>();
+            TabelaSimbolos = new Dictionary<string, string>();
         }
 
         public void executeAction(int action, Token token)
@@ -30,7 +33,6 @@ namespace Interface.GALS
             {
                 default:
                     break;
-
                 case 1:
                     ActionUm();
                     break;
@@ -110,15 +112,12 @@ namespace Interface.GALS
                 case 20:
                     ActionVinte();
                     break;
-
                 case 21:
                     ActionVinteUm(token);
                     break;
-
                 case 22:
                     ActionVinteDois(token);
                     break;
-                // nao tem 23
                 case 24:
                     ActionVinteQuatro();
                     break;
@@ -134,7 +133,6 @@ namespace Interface.GALS
                 case 28:
                     ActionVinteOito();
                     break;
-                // nao tem 29
                 case 30:
                     ActionTrinta(token);
                     break;
@@ -145,7 +143,7 @@ namespace Interface.GALS
                     ActionTrintaDois(token);
                     break;
                 case 33:
-                    ActionTrintaTres();
+                    ActionTrintaTres(token);
                     break;
                 case 34:
                     ActionTrintaQuatro();
@@ -153,51 +151,111 @@ namespace Interface.GALS
                 case 35:
                     ActionTrintaCinco();
                     break;
-
             }
 
             Console.WriteLine($"#{action}" + (token != null ? $" (token: {token?.Lexeme})" : ""));
 
             // lançando exceção se o arquivo n estiver salvo, verificar
-            File.WriteAllText($"{Interface.saveDirectory.Split(".txt")[0]}.il", Codigo);
+            try
+            {
+                File.WriteAllText($"{Interface.saveDirectory.Split(".txt")[0]}.il", Codigo);
+            }
+            catch
+            {
+
+            }
         }
 
+        //feito -- testar
         private void ActionTrintaCinco()
         {
-            // continuar depois de implementar o mapa
+            foreach (var identificador in ListaIdentificadores)
+            {
+                if (!TabelaSimbolos.TryGetValue(identificador, out var t))
+                    throw new SemanticError("");
+
+                var tipoId = TabelaSimbolos[identificador];
+
+                var tipoClasse = "";
+
+                switch (tipoId)
+                {
+                    case "int64":
+                        tipoClasse = "Int64";
+                        break;
+                    case "float64":
+                        tipoClasse = "Double";
+                        break;
+                    default:
+                        break;
+                }
+
+                Codigo += "\ncall string[mscorlib]System.Console::ReadLine()";
+                Codigo += $"\ncall tipoid[mscorlib]System.{tipoClasse}::Parse(string)";
+                Codigo += $"\nstloc {identificador}";
+            }
+
+            ListaIdentificadores.Clear();
         }
 
+        //feito -- testar
         private void ActionTrintaQuatro()
         {
-            // continuar depois de implementar o mapa
+            var id = ListaIdentificadores[ListaIdentificadores.Count - 1];
+            ListaIdentificadores.RemoveAt(ListaIdentificadores.Count - 1);
+
+            if (!TabelaSimbolos.TryGetValue(id, out var t))
+                throw new SemanticError("");
+
+            var tipoId = TabelaSimbolos[id];
+
+            var tipoExpressao = PilhaTipos.Pop();
+
+            if (tipoId != tipoExpressao)
+                throw new SemanticError("");
+
+            if (tipoId == "int64")
+                Codigo += "\nconv.i8";
+
+            Codigo += $"\nstloc {id}";
         }
 
-        private void ActionTrintaTres()
+        //feito -- testar
+        private void ActionTrintaTres(Token token)
         {
-            // continuar depois de implementar o mapa
+            var id = token.Lexeme;
+
+            if (!TabelaSimbolos.TryGetValue(id, out var t))
+                throw new SemanticError("");
+
+            var tipoId = TabelaSimbolos[id];
+
+            PilhaTipos.Push(tipoId);
+
+            Codigo += $"\nldloc {id}";
+
+            if (tipoId == "int64")
+                Codigo += "\nconv.r8";
         }
 
         private void ActionTrintaDois(Token token)
         {
-            listaIdentificadores.Add(token.Lexeme);
+            ListaIdentificadores.Add(token.Lexeme);
         }
 
+        // feito -- testar
         private void ActionTrintaUm()
         {
-            for (int i = 0; i < listaIdentificadores.Count; i++)
+            foreach (var identificador in ListaIdentificadores)
             {
-                // continuar depois de implementar o mapa
+                if (TabelaSimbolos.TryGetValue(identificador, out var ret))
+                    throw new SemanticError("");
+
+                TabelaSimbolos.Add(identificador, TipoVar);
+                Codigo += $"\n.locals({TipoVar} {identificador}";
             }
-            /* 
-               para cada id in listaid faça
-    //se TS.tem (id) 
-    //então erro semântico, parar
-    //fimse 
-    TS.adiciona(id, tipovar) 
-    código.adiciona (.locals(tipovar id))
-  fimpara
-  listaid.limpa
-*/
+
+            ListaIdentificadores.Clear();
         }
 
         // feito ?
@@ -209,7 +267,7 @@ namespace Interface.GALS
             }
             else if (token.Lexeme == "real")
             {
-                TipoVar == "float64";
+                TipoVar = "float64";
             }
         }
 
@@ -242,7 +300,7 @@ namespace Interface.GALS
         // feito ?
         private void ActionVinteDois(Token token)
         {
-            PilhaTipos.Push(typeof(string));
+            PilhaTipos.Push("string");
             Codigo += "\nldstr " + token.Lexeme;
 
             Line = token.Line;
@@ -253,7 +311,7 @@ namespace Interface.GALS
         {
             // constantes do tipo char da linguagem fonte (\n, \s, \t) equivalem a constantes
             // do tipo string em IL ("\n", " ", "\t", respectivamente)
-            PilhaTipos.Push(typeof(char));
+            PilhaTipos.Push("char");
 
             if (token.Lexeme == "\n")
             {
@@ -276,9 +334,9 @@ namespace Interface.GALS
             // ambos os tipos devem ser inteiros para divisão inteira
             var tipo1 = PilhaTipos.Pop();
             var tipo2 = PilhaTipos.Pop();
-            if (tipo1 == typeof(int) && tipo2 == typeof(int))
+            if (tipo1 == "int" && tipo2 == "int")
             {
-                PilhaTipos.Push(typeof(int));
+                PilhaTipos.Push("int");
             }
             else
             {
@@ -293,9 +351,9 @@ namespace Interface.GALS
         {
             var tipo1 = PilhaTipos.Pop();
             var tipo2 = PilhaTipos.Pop();
-            if (tipo1 == typeof(bool) && tipo2 == typeof(bool))
+            if (tipo1 == "bool" && tipo2 == "bool")
             {
-                PilhaTipos.Push(typeof(bool));
+                PilhaTipos.Push("bool");
             }
             else
             {
@@ -311,9 +369,9 @@ namespace Interface.GALS
         {
             var tipo1 = PilhaTipos.Pop();
             var tipo2 = PilhaTipos.Pop();
-            if (tipo1 == typeof(bool) && tipo2 == typeof(bool))
+            if (tipo1 == "bool" && tipo2 == "bool")
             {
-                PilhaTipos.Push(typeof(bool));
+                PilhaTipos.Push("bool");
             }
             else
             {
@@ -348,18 +406,18 @@ namespace Interface.GALS
         private void ActionQuatorze()
         {
             var tipo = PilhaTipos.Pop();
-            if (tipo == typeof(int))
+            if (tipo == "int")
                 Codigo += "\nconv.i8";
 
-            if (tipo == typeof(char))
+            if (tipo == "char")
                 Codigo += "\ncall void [mscorlib]System.Console::Write(string)";
-            else if (tipo == typeof(string))
+            else if (tipo == "string")
                 Codigo += "\ncall void [mscorlib]System.Console::Write(string)";
-            else if (tipo == typeof(bool))
+            else if (tipo == "bool")
                 Codigo += "\ncall void [mscorlib]System.Console::Write(bool)";
-            else if (tipo == typeof(int))
+            else if (tipo == "int")
                 Codigo += "\ncall void [mscorlib]System.Console::Write(int64)";
-            else if (tipo == typeof(float))
+            else if (tipo == "float")
                 Codigo += "\ncall void [mscorlib]System.Console::Write(float64)";
         }
 
@@ -367,8 +425,8 @@ namespace Interface.GALS
         private void ActionTreze()
         {
             var tipo = PilhaTipos.Pop();
-            if (tipo == typeof(bool))
-                PilhaTipos.Push(typeof(bool));
+            if (tipo == "bool")
+                PilhaTipos.Push("bool");
             else
                 throw new SemanticError("tipo incompatível em expressão lógica.", line: Line);
             Codigo += "\nldc.i4.1";
@@ -378,14 +436,14 @@ namespace Interface.GALS
         // feito
         private void ActionDoze()
         {
-            PilhaTipos.Push(typeof(bool));
+            PilhaTipos.Push("bool");
             Codigo += "ldc.i4.0";
         }
 
         // feito
         private void ActionOnze()
         {
-            PilhaTipos.Push(typeof(bool));
+            PilhaTipos.Push("bool");
             Codigo += "\nldc.i4.1";
         }
 
@@ -398,7 +456,7 @@ namespace Interface.GALS
             var tipo2 = PilhaTipos.Pop();
 
             if (tipo1 == tipo2)
-                PilhaTipos.Push(typeof(bool));
+                PilhaTipos.Push("bool");
             else
                 throw new SemanticError("tipos incompatíveis em expressão relacional", line: Line);
 
@@ -433,13 +491,13 @@ namespace Interface.GALS
         private void ActionOito()
         {
             var tipo = PilhaTipos.Pop();
-            if (tipo == typeof(float))
+            if (tipo == "float")
             {
-                PilhaTipos.Push(typeof(float));
+                PilhaTipos.Push("float");
             }
-            else if (tipo == typeof(int))
+            else if (tipo == "int")
             {
-                PilhaTipos.Push(typeof(int));
+                PilhaTipos.Push("int");
             }
             else
             {
@@ -455,13 +513,13 @@ namespace Interface.GALS
         private void ActionSete()
         {
             var tipo = PilhaTipos.Pop();
-            if (tipo == typeof(float))
+            if (tipo == "float")
             {
-                PilhaTipos.Push(typeof(float));
+                PilhaTipos.Push("float");
             }
-            else if (tipo == typeof(int))
+            else if (tipo == "int")
             {
-                PilhaTipos.Push(typeof(int));
+                PilhaTipos.Push("int");
             }
             else
             {
@@ -473,7 +531,7 @@ namespace Interface.GALS
         // CONFERIR COM A JOYCE
         private void ActionSeis(Token token)
         {
-            PilhaTipos.Push(typeof(float));
+            PilhaTipos.Push("float");
 
             token.Lexeme = token.Lexeme.Replace(".", "0,");
 
@@ -498,7 +556,7 @@ namespace Interface.GALS
         // CONFERIDO
         private void ActionCinco(Token token)
         {
-            PilhaTipos.Push(typeof(int));
+            PilhaTipos.Push("int");
 
             if (token.Lexeme.Contains("d"))
             {
@@ -523,13 +581,13 @@ namespace Interface.GALS
             var tipo2 = PilhaTipos.Pop();
 
             // na divisão os operandos devem ser do mesmo tipo
-            if (tipo1 == typeof(float) && (tipo2 == typeof(float)))
+            if (tipo1 == "float" && (tipo2 == "float"))
             {
-                PilhaTipos.Push(typeof(float));
+                PilhaTipos.Push("float");
             }
-            else if (tipo1 == typeof(int) && (tipo2 == typeof(int)))
+            else if (tipo1 == "int" && (tipo2 == "int"))
             {
-                PilhaTipos.Push(typeof(int));
+                PilhaTipos.Push("int");
             }
             else
             {
@@ -546,21 +604,21 @@ namespace Interface.GALS
             var tipo1 = PilhaTipos.Pop();
             var tipo2 = PilhaTipos.Pop();
 
-            if (tipo1 == typeof(float) && (tipo2 == typeof(float)))
+            if (tipo1 == "float" && (tipo2 == "float"))
             {
-                PilhaTipos.Push(typeof(float));
+                PilhaTipos.Push("float");
             }
-            else if (tipo1 == typeof(int) && (tipo2 == typeof(int)))
+            else if (tipo1 == "int" && (tipo2 == "int"))
             {
-                PilhaTipos.Push(typeof(int));
+                PilhaTipos.Push("int");
             }
-            else if (tipo1 == typeof(int) && (tipo2 == typeof(float)))
+            else if (tipo1 == "int" && (tipo2 == "float"))
             {
-                PilhaTipos.Push(typeof(float));
+                PilhaTipos.Push("float");
             }
-            else if (tipo1 == typeof(float) && (tipo2 == typeof(int)))
+            else if (tipo1 == "float" && (tipo2 == "int"))
             {
-                PilhaTipos.Push(typeof(float));
+                PilhaTipos.Push("float");
             }
             else
             {
@@ -576,21 +634,21 @@ namespace Interface.GALS
         {
             var tipo1 = PilhaTipos.Pop();
             var tipo2 = PilhaTipos.Pop();
-            if (tipo1 == typeof(float) && (tipo2 == typeof(float)))
+            if (tipo1 == "float" && (tipo2 == "float"))
             {
-                PilhaTipos.Push(typeof(float));
+                PilhaTipos.Push("float");
             }
-            else if (tipo1 == typeof(int) && (tipo2 == typeof(int)))
+            else if (tipo1 == "int" && (tipo2 == "int"))
             {
-                PilhaTipos.Push(typeof(int));
+                PilhaTipos.Push("int");
             }
-            else if (tipo1 == typeof(int) && (tipo2 == typeof(float)))
+            else if (tipo1 == "int" && (tipo2 == "float"))
             {
-                PilhaTipos.Push(typeof(float));
+                PilhaTipos.Push("float");
             }
-            else if (tipo1 == typeof(float) && (tipo2 == typeof(int)))
+            else if (tipo1 == "float" && (tipo2 == "int"))
             {
-                PilhaTipos.Push(typeof(float));
+                PilhaTipos.Push("float");
             }
             else
             {
@@ -607,21 +665,21 @@ namespace Interface.GALS
             var tipo1 = PilhaTipos.Pop();
             var tipo2 = PilhaTipos.Pop();
 
-            if (tipo1 == typeof(float) && (tipo2 == typeof(float)))
+            if (tipo1 == "float" && (tipo2 == "float"))
             {
-                PilhaTipos.Push(typeof(float));
+                PilhaTipos.Push("float");
             }
-            else if (tipo1 == typeof(int) && (tipo2 == typeof(int)))
+            else if (tipo1 == "int" && (tipo2 == "int"))
             {
-                PilhaTipos.Push(typeof(int));
+                PilhaTipos.Push("int");
             }
-            else if (tipo1 == typeof(int) && (tipo2 == typeof(float)))
+            else if (tipo1 == "int" && (tipo2 == "float"))
             {
-                PilhaTipos.Push(typeof(float));
+                PilhaTipos.Push("float");
             }
-            else if (tipo1 == typeof(float) && (tipo2 == typeof(int)))
+            else if (tipo1 == "float" && (tipo2 == "int"))
             {
-                PilhaTipos.Push(typeof(float));
+                PilhaTipos.Push("float");
             }
             else
             {
