@@ -1,4 +1,6 @@
-﻿namespace Interface.GALS
+﻿using System.Runtime.CompilerServices;
+
+namespace Interface.GALS
 {
     public class Semantico : Constants
     {
@@ -6,6 +8,14 @@
         public string Codigo { get; set; }
         public Stack<Type> PilhaTipos { get; set; }
         public int Line { get; set; }
+        public string TipoVar { get; set; }
+        public List<string> listaIdentificadores { get; set; } // ??????????
+        // CRIAR TABELA DE SÍMBOLOS
+        // CRIAR UM MAPA EM C# -> Map<string,string> onde o primeiro string é identificador e o segundo string é o tipo
+
+        // tabela de símbolos, usada para armazenar os identificadores e respecitivos tipos, conforme
+		// declaração de variáveis
+
 
         public Semantico()
         {
@@ -108,6 +118,42 @@
                 case 22:
                     ActionVinteDois(token);
                     break;
+                // nao tem 23
+                case 24:
+                    ActionVinteQuatro();
+                    break;
+                case 25:
+                    ActionVinteCinco();
+                    break;
+                case 26:
+                    ActionVinteSeis();
+                    break;
+                case 27:
+                    ActionVinteSete();
+                    break;
+                case 28:
+                    ActionVinteOito();
+                    break;
+                // nao tem 29
+                case 30:
+                    ActionTrinta(token);
+                    break;
+                case 31:
+                    ActionTrintaUm();
+                    break;
+                case 32:
+                    ActionTrintaDois(token);
+                    break;
+                case 33:
+                    ActionTrintaTres();
+                    break;
+                case 34:
+                    ActionTrintaQuatro();
+                    break;
+                case 35:
+                    ActionTrintaCinco();
+                    break;
+
             }
 
             Console.WriteLine($"#{action}" + (token != null ? $" (token: {token?.Lexeme})" : ""));
@@ -115,6 +161,83 @@
             // lançando exceção se o arquivo n estiver salvo, verificar
             File.WriteAllText($"{Interface.saveDirectory.Split(".txt")[0]}.il", Codigo);
         }
+
+        private void ActionTrintaCinco()
+        {
+            // continuar depois de implementar o mapa
+        }
+
+        private void ActionTrintaQuatro()
+        {
+            // continuar depois de implementar o mapa
+        }
+
+        private void ActionTrintaTres()
+        {
+            // continuar depois de implementar o mapa
+        }
+
+        private void ActionTrintaDois(Token token)
+        {
+            listaIdentificadores.Add(token.Lexeme);
+        }
+
+        private void ActionTrintaUm()
+        {
+            for (int i = 0; i < listaIdentificadores.Count; i++)
+            {
+                // continuar depois de implementar o mapa
+            }
+            /* 
+               para cada id in listaid faça
+    //se TS.tem (id) 
+    //então erro semântico, parar
+    //fimse 
+    TS.adiciona(id, tipovar) 
+    código.adiciona (.locals(tipovar id))
+  fimpara
+  listaid.limpa
+*/
+        }
+
+        // feito ?
+        private void ActionTrinta(Token token)
+        {
+            if (token.Lexeme == "int")
+            {
+                TipoVar = "int64";
+            }
+            else if (token.Lexeme == "real")
+            {
+                TipoVar == "float64";
+            }
+        }
+
+        private void ActionVinteOito()
+        {
+            // esquema de tradução completo.pdf última página (AVA)
+        }
+
+        private void ActionVinteSete()
+        {
+            // esquema de tradução completo.pdf última página (AVA)
+        }
+
+        private void ActionVinteSeis()
+        {
+            // esquema de tradução completo.pdf última página (AVA)
+        }
+
+        private void ActionVinteCinco()
+        {
+            // esquema de tradução completo.pdf última página (AVA)
+        }
+
+        private void ActionVinteQuatro()
+        {
+            // esquema de tradução completo.pdf última página (AVA)
+        }
+
 
         // feito ?
         private void ActionVinteDois(Token token)
@@ -358,6 +481,8 @@
             {
                 var arraystr = token.Lexeme.Split("d");
                 var numeroDpsDoD = double.Parse(arraystr[1]);
+                // lançando exceção pq o número pode ser mt grande
+                // por exemplo .3d128 => tem que elevar 10^128, ai gera exceção pq é mt grande
                 var result = (decimal)Math.Pow(10, numeroDpsDoD);
                 var aaaa = decimal.Parse(arraystr[0]) * result;
                 var resultadoFinal = decimal.Parse(aaaa + arraystr[1].Substring(arraystr[1].IndexOf("d") + 2));
