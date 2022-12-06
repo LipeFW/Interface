@@ -133,13 +133,13 @@
 
             if (token.Lexeme == "\n")
             {
-                Codigo += "ldstr \"\n\"";
+                Codigo += "\nldstr \"\n\"";
                 Line++;
             }
             else if (token.Lexeme == "\\s")
-                Codigo += "ldstr \" \" ";
+                Codigo += "\nldstr \" \" ";
             else if (token.Lexeme == "\t")
-                Codigo += "ldstr \"\\t\"";
+                Codigo += "\nldstr \"\\t\"";
             else
                 Codigo += "\nldstr " + token.Lexeme;
 
@@ -204,7 +204,7 @@
         {
             // println -> imprimir nova linha 
             // ldstr "\n"
-            Codigo += "ldstr \"\n\"";
+            Codigo += "\nldstr \"\\n\"";
             Codigo += "\ncall void [mscorlib]System.Console::Write(string)";
         }
 
@@ -247,8 +247,8 @@
                 PilhaTipos.Push(typeof(bool));
             else
                 throw new SemanticError("tipo incompatível em expressão lógica.", line: Line);
-            Codigo += "ldc.i4.1";
-            Codigo += "xor";
+            Codigo += "\nldc.i4.1";
+            Codigo += "\nxor";
         }
 
         // feito
@@ -262,7 +262,7 @@
         private void ActionOnze()
         {
             PilhaTipos.Push(typeof(bool));
-            Codigo += "ldc.i4.1";
+            Codigo += "\nldc.i4.1";
         }
 
 
