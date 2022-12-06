@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Interface.GALS
+﻿namespace Interface.GALS
 {
     public class Semantico : Constants
     {
@@ -33,6 +31,7 @@ namespace Interface.GALS
             {
                 default:
                     break;
+
                 case 1:
                     ActionUm();
                     break;
@@ -112,42 +111,55 @@ namespace Interface.GALS
                 case 20:
                     ActionVinte();
                     break;
+
                 case 21:
                     ActionVinteUm(token);
                     break;
+
                 case 22:
                     ActionVinteDois(token);
                     break;
+
                 case 24:
                     ActionVinteQuatro();
                     break;
+
                 case 25:
                     ActionVinteCinco();
                     break;
+
                 case 26:
                     ActionVinteSeis();
                     break;
+
                 case 27:
                     ActionVinteSete();
                     break;
+
                 case 28:
                     ActionVinteOito();
                     break;
+
                 case 30:
                     ActionTrinta(token);
                     break;
+
                 case 31:
                     ActionTrintaUm();
                     break;
+
                 case 32:
                     ActionTrintaDois(token);
                     break;
+
                 case 33:
                     ActionTrintaTres(token);
                     break;
+
                 case 34:
                     ActionTrintaQuatro();
                     break;
+
                 case 35:
                     ActionTrintaCinco();
                     break;
@@ -155,14 +167,13 @@ namespace Interface.GALS
 
             Console.WriteLine($"#{action}" + (token != null ? $" (token: {token?.Lexeme})" : ""));
 
-            // lançando exceção se o arquivo n estiver salvo, verificar
             try
             {
                 File.WriteAllText($"{Interface.saveDirectory.Split(".txt")[0]}.il", Codigo);
             }
             catch
             {
-
+                //validar o que fazer caso arquivo não salvo
             }
         }
 
@@ -238,6 +249,7 @@ namespace Interface.GALS
                 Codigo += "\nconv.r8";
         }
 
+        //feito
         private void ActionTrintaDois(Token token)
         {
             ListaIdentificadores.Add(token.Lexeme);
@@ -271,6 +283,7 @@ namespace Interface.GALS
             }
         }
 
+        #region faltante
         private void ActionVinteOito()
         {
             // esquema de tradução completo.pdf última página (AVA)
@@ -295,6 +308,7 @@ namespace Interface.GALS
         {
             // esquema de tradução completo.pdf última página (AVA)
         }
+        #endregion faltante
 
 
         // feito ?
@@ -375,13 +389,12 @@ namespace Interface.GALS
             }
             else
             {
-                //exibir na caixa de mensagens com linha
                 throw new SemanticError("tipos incompatíveis em expressão lógica.", line: Line);
             }
             Codigo += "\nand";
         }
 
-        // feito (?)
+        // feito (?) -- verificar
         private void ActionDezessete()
         {
             // println -> imprimir nova linha 
@@ -450,6 +463,7 @@ namespace Interface.GALS
 
         // pegar o trabalho de tcc q foi mencionado no "3o aula - semantico.pdf"
         // página 50 tem um exemplo de !=
+        // feito -- MAS TEM Q TESTAR
         private void ActionDez()
         {
             var tipo1 = PilhaTipos.Pop();
@@ -528,7 +542,7 @@ namespace Interface.GALS
             }
         }
 
-        // CONFERIR COM A JOYCE
+        // CONFERIR COM A JOYCE - conferir!!
         private void ActionSeis(Token token)
         {
             PilhaTipos.Push("float");
@@ -553,7 +567,7 @@ namespace Interface.GALS
             Line = token.Line;
         }
 
-        // CONFERIDO
+        // CONFERIDO -- mas conferir de novo
         private void ActionCinco(Token token)
         {
             PilhaTipos.Push("int");
