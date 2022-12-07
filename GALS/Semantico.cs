@@ -25,6 +25,7 @@
             TipoVar = "";
             ListaIdentificadores = new List<string>();
             TabelaSimbolos = new Dictionary<string, string>();
+            PilhaRotulos = new Stack<string>();
         }
 
         public void executeAction(int action, Token token)
@@ -167,7 +168,7 @@
                     break;
             }
 
-            Console.WriteLine($"#{action}" + (token != null ? $" (token: {token?.Lexeme})" : ""));
+            // Console.WriteLine($"#{action}" + (token != null ? $" (token: {token?.Lexeme})" : ""));
 
             try
             {
@@ -204,7 +205,7 @@
                 }
 
                 Codigo += "\ncall string[mscorlib]System.Console::ReadLine()";
-                Codigo += $"\ncall tipoid[mscorlib]System.{tipoClasse}::Parse(string)";
+                Codigo += $"\ncall {tipoId}[mscorlib]System.{tipoClasse}::Parse(string)";
                 Codigo += $"\nstloc {identificador}";
             }
 
@@ -266,7 +267,7 @@
                     throw new SemanticError("");
 
                 TabelaSimbolos.Add(identificador, TipoVar);
-                Codigo += $"\n.locals({TipoVar} {identificador}";
+                Codigo += $"\n.locals({TipoVar} {identificador})";
             }
 
             ListaIdentificadores.Clear();
@@ -279,16 +280,15 @@
             {
                 TipoVar = "int64";
             }
-            else if (token.Lexeme == "real")
+            else if (token.Lexeme == "float")
             {
                 TipoVar = "float64";
             }
         }
 
-        #region faltante
         private void ActionVinteOito()
         {
-            Codigo += "brtrue " + PilhaRotulos.Pop();
+            Codigo += "\nbrtrue " + PilhaRotulos.Pop();
         }
 
         private void ActionVinteSete()
@@ -300,24 +300,23 @@
 
         private void ActionVinteSeis()
         {
-            Codigo += PilhaRotulos.Pop() + ":";
+            Codigo += "\n" + PilhaRotulos.Pop() + ":";
         }
 
         private void ActionVinteCinco()
         {
             NumeroRotulo++;
-            Codigo += "br novo_rotulo" + NumeroRotulo;
-            Codigo += PilhaRotulos.Pop() + ":";
+            Codigo += "\nbr novo_rotulo" + NumeroRotulo;
+            Codigo += "\n" + PilhaRotulos.Pop() + ":";
             PilhaRotulos.Push("novo_rotulo" + NumeroRotulo);
         }
 
         private void ActionVinteQuatro()
         {
             NumeroRotulo++;
-            Codigo += "brfalse novo_rotulo" + NumeroRotulo + "\n";
+            Codigo += "\nbrfalse novo_rotulo" + NumeroRotulo + "\n";
             PilhaRotulos.Push("novo_rotulo" + NumeroRotulo);
         }
-        #endregion faltante
 
 
         // feito ?
@@ -357,9 +356,9 @@
             // ambos os tipos devem ser inteiros para divisão inteira
             var tipo1 = PilhaTipos.Pop();
             var tipo2 = PilhaTipos.Pop();
-            if (tipo1 == "int" && tipo2 == "int")
+            if (tipo1 == "int64" && tipo2 == "int64")
             {
-                PilhaTipos.Push("int");
+                PilhaTipos.Push("int64");
             }
             else
             {
@@ -428,7 +427,7 @@
         private void ActionQuatorze()
         {
             var tipo = PilhaTipos.Pop();
-            if (tipo == "int")
+            if (tipo == "int64")
                 Codigo += "\nconv.i8";
 
             if (tipo == "char")
@@ -437,9 +436,9 @@
                 Codigo += "\ncall void [mscorlib]System.Console::Write(string)";
             else if (tipo == "bool")
                 Codigo += "\ncall void [mscorlib]System.Console::Write(bool)";
-            else if (tipo == "int")
+            else if (tipo == "int64")
                 Codigo += "\ncall void [mscorlib]System.Console::Write(int64)";
-            else if (tipo == "float")
+            else if (tipo == "float64")
                 Codigo += "\ncall void [mscorlib]System.Console::Write(float64)";
         }
 
@@ -514,13 +513,13 @@
         private void ActionOito()
         {
             var tipo = PilhaTipos.Pop();
-            if (tipo == "float")
+            if (tipo == "float64")
             {
-                PilhaTipos.Push("float");
+                PilhaTipos.Push("float64");
             }
-            else if (tipo == "int")
+            else if (tipo == "int64")
             {
-                PilhaTipos.Push("int");
+                PilhaTipos.Push("int64");
             }
             else
             {
@@ -536,13 +535,13 @@
         private void ActionSete()
         {
             var tipo = PilhaTipos.Pop();
-            if (tipo == "float")
+            if (tipo == "float64")
             {
-                PilhaTipos.Push("float");
+                PilhaTipos.Push("float64");
             }
-            else if (tipo == "int")
+            else if (tipo == "int64")
             {
-                PilhaTipos.Push("int");
+                PilhaTipos.Push("int64");
             }
             else
             {
@@ -554,9 +553,9 @@
         // CONFERIR COM A JOYCE - conferir!!
         private void ActionSeis(Token token)
         {
-            PilhaTipos.Push("float");
+            PilhaTipos.Push("float64");
 
-            token.Lexeme = token.Lexeme.Replace(".", "0,");
+            token.Lexeme = token.Lexeme.Replace(".", "0.");
 
             if (token.Lexeme.Contains("d"))
             {
@@ -579,7 +578,7 @@
         // CONFERIDO -- mas conferir de novo
         private void ActionCinco(Token token)
         {
-            PilhaTipos.Push("int");
+            PilhaTipos.Push("int64");
 
             if (token.Lexeme.Contains("d"))
             {
@@ -604,13 +603,13 @@
             var tipo2 = PilhaTipos.Pop();
 
             // na divisão os operandos devem ser do mesmo tipo
-            if (tipo1 == "float" && (tipo2 == "float"))
+            if (tipo1 == "float64" && (tipo2 == "float64"))
             {
-                PilhaTipos.Push("float");
+                PilhaTipos.Push("float64");
             }
-            else if (tipo1 == "int" && (tipo2 == "int"))
+            else if (tipo1 == "int64" && (tipo2 == "int64"))
             {
-                PilhaTipos.Push("int");
+                PilhaTipos.Push("int64");
             }
             else
             {
@@ -618,7 +617,7 @@
                 throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética", line: Line);
             }
 
-            Codigo += "div";
+            Codigo += "\ndiv";
         }
 
         // feito
@@ -627,21 +626,21 @@
             var tipo1 = PilhaTipos.Pop();
             var tipo2 = PilhaTipos.Pop();
 
-            if (tipo1 == "float" && (tipo2 == "float"))
+            if (tipo1 == "float64" && (tipo2 == "float64"))
             {
-                PilhaTipos.Push("float");
+                PilhaTipos.Push("float64");
             }
-            else if (tipo1 == "int" && (tipo2 == "int"))
+            else if (tipo1 == "int64" && (tipo2 == "int64"))
             {
-                PilhaTipos.Push("int");
+                PilhaTipos.Push("int64");
             }
-            else if (tipo1 == "int" && (tipo2 == "float"))
+            else if (tipo1 == "int64" && (tipo2 == "float64"))
             {
-                PilhaTipos.Push("float");
+                PilhaTipos.Push("float64");
             }
-            else if (tipo1 == "float" && (tipo2 == "int"))
+            else if (tipo1 == "float64" && (tipo2 == "int64"))
             {
-                PilhaTipos.Push("float");
+                PilhaTipos.Push("float64");
             }
             else
             {
@@ -649,7 +648,7 @@
                 throw new SemanticError("tipo(s) incompatível(is) em expressão aritmética", line: Line);
             }
 
-            Codigo += "mul";
+            Codigo += "\nmul";
         }
 
         // feito
@@ -657,21 +656,21 @@
         {
             var tipo1 = PilhaTipos.Pop();
             var tipo2 = PilhaTipos.Pop();
-            if (tipo1 == "float" && (tipo2 == "float"))
+            if (tipo1 == "float64" && (tipo2 == "float64"))
             {
-                PilhaTipos.Push("float");
+                PilhaTipos.Push("float64");
             }
-            else if (tipo1 == "int" && (tipo2 == "int"))
+            else if (tipo1 == "int64" && (tipo2 == "int64"))
             {
-                PilhaTipos.Push("int");
+                PilhaTipos.Push("int64");
             }
-            else if (tipo1 == "int" && (tipo2 == "float"))
+            else if (tipo1 == "int64" && (tipo2 == "float64"))
             {
-                PilhaTipos.Push("float");
+                PilhaTipos.Push("float64");
             }
-            else if (tipo1 == "float" && (tipo2 == "int"))
+            else if (tipo1 == "float64" && (tipo2 == "int64"))
             {
-                PilhaTipos.Push("float");
+                PilhaTipos.Push("float64");
             }
             else
             {
@@ -688,21 +687,21 @@
             var tipo1 = PilhaTipos.Pop();
             var tipo2 = PilhaTipos.Pop();
 
-            if (tipo1 == "float" && (tipo2 == "float"))
+            if (tipo1 == "float64" && (tipo2 == "float64"))
             {
-                PilhaTipos.Push("float");
+                PilhaTipos.Push("float64");
             }
-            else if (tipo1 == "int" && (tipo2 == "int"))
+            else if (tipo1 == "int64" && (tipo2 == "int64"))
             {
-                PilhaTipos.Push("int");
+                PilhaTipos.Push("int64");
             }
-            else if (tipo1 == "int" && (tipo2 == "float"))
+            else if (tipo1 == "int64" && (tipo2 == "float64"))
             {
-                PilhaTipos.Push("float");
+                PilhaTipos.Push("float64");
             }
-            else if (tipo1 == "float" && (tipo2 == "int"))
+            else if (tipo1 == "float64" && (tipo2 == "int64"))
             {
-                PilhaTipos.Push("float");
+                PilhaTipos.Push("float64");
             }
             else
             {

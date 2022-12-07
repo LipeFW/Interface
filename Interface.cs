@@ -299,7 +299,7 @@ namespace Interface
 
             try
             {
-                textBox1.Text = "";
+                textBox1.Text = "Programa compilado com sucesso";
                 sintatico.parse(lexico, semantico);
             }
             catch (LexicalError lexicalError)
