@@ -5,6 +5,8 @@
         public string Operador { get; set; }
         public string Codigo { get; set; }
         public Stack<string> PilhaTipos { get; set; }
+        public Stack<string> PilhaRotulos { get; set; }
+        public int NumeroRotulo { get; set; }
         public int Line { get; set; }
         public string TipoVar { get; set; }
         public List<string> ListaIdentificadores { get; set; } // ??????????
@@ -286,27 +288,34 @@
         #region faltante
         private void ActionVinteOito()
         {
-            // esquema de tradução completo.pdf última página (AVA)
+            Codigo += "brtrue " + PilhaRotulos.Pop();
         }
 
         private void ActionVinteSete()
         {
-            // esquema de tradução completo.pdf última página (AVA)
+            NumeroRotulo++;
+            Codigo += "novo_rotulo" + NumeroRotulo + ":";
+            PilhaRotulos.Push("novo_rotulo" + NumeroRotulo);
         }
 
         private void ActionVinteSeis()
         {
-            // esquema de tradução completo.pdf última página (AVA)
+            Codigo += PilhaRotulos.Pop() + ":";
         }
 
         private void ActionVinteCinco()
         {
-            // esquema de tradução completo.pdf última página (AVA)
+            NumeroRotulo++;
+            Codigo += "br novo_rotulo" + NumeroRotulo;
+            Codigo += PilhaRotulos.Pop() + ":";
+            PilhaRotulos.Push("novo_rotulo" + NumeroRotulo);
         }
 
         private void ActionVinteQuatro()
         {
-            // esquema de tradução completo.pdf última página (AVA)
+            NumeroRotulo++;
+            Codigo += "brfalse novo_rotulo" + NumeroRotulo + "\n";
+            PilhaRotulos.Push("novo_rotulo" + NumeroRotulo);
         }
         #endregion faltante
 
