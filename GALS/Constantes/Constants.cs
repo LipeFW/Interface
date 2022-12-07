@@ -1,4 +1,4 @@
-﻿namespace Interface.GALS
+﻿namespace Interface.GALS.Constantes
 {
     public class Constants : ScannerConstants
     {

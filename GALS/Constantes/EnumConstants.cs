@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Interface.GALS
+namespace Interface.GALS.Constantes
 {
     public enum EnumConstants
     {

@@ -1,5 +1,7 @@
 ﻿using Interface.Components;
-using Interface.GALS;
+using Interface.GALS.Lexical;
+using Interface.GALS.Semantic;
+using Interface.GALS.Syntatic;
 
 namespace Interface
 {

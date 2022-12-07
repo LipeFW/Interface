@@ -1,4 +1,4 @@
-﻿namespace Interface.GALS
+﻿namespace Interface.GALS.Lexical
 {
     public class LexicalError : AnalysisError
     {

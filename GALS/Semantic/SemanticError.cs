@@ -1,4 +1,4 @@
-﻿namespace Interface.GALS
+﻿namespace Interface.GALS.Semantic
 {
     public class SemanticError : AnalysisError
     {

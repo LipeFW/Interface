@@ -1,4 +1,6 @@
-﻿namespace Interface.GALS
+﻿using Interface.GALS.Constantes;
+
+namespace Interface.GALS.Semantic
 {
     public class Semantico : Constants
     {
@@ -484,16 +486,16 @@
 
             switch (Operador)
             {
-                case (">"):
+                case ">":
                     Codigo += "\ncgt";
                     break;
-                case ("<"):
+                case "<":
                     Codigo += "\nclt";
                     break;
-                case ("=="):
+                case "==":
                     Codigo += "\nceq";
                     break;
-                case ("!="):
+                case "!=":
                     Codigo += "\nldc.i4 0";
                     Codigo += "\nceq";
                     break;
@@ -603,11 +605,11 @@
             var tipo2 = PilhaTipos.Pop();
 
             // na divisão os operandos devem ser do mesmo tipo
-            if (tipo1 == "float64" && (tipo2 == "float64"))
+            if (tipo1 == "float64" && tipo2 == "float64")
             {
                 PilhaTipos.Push("float64");
             }
-            else if (tipo1 == "int64" && (tipo2 == "int64"))
+            else if (tipo1 == "int64" && tipo2 == "int64")
             {
                 PilhaTipos.Push("int64");
             }
@@ -626,19 +628,19 @@
             var tipo1 = PilhaTipos.Pop();
             var tipo2 = PilhaTipos.Pop();
 
-            if (tipo1 == "float64" && (tipo2 == "float64"))
+            if (tipo1 == "float64" && tipo2 == "float64")
             {
                 PilhaTipos.Push("float64");
             }
-            else if (tipo1 == "int64" && (tipo2 == "int64"))
+            else if (tipo1 == "int64" && tipo2 == "int64")
             {
                 PilhaTipos.Push("int64");
             }
-            else if (tipo1 == "int64" && (tipo2 == "float64"))
+            else if (tipo1 == "int64" && tipo2 == "float64")
             {
                 PilhaTipos.Push("float64");
             }
-            else if (tipo1 == "float64" && (tipo2 == "int64"))
+            else if (tipo1 == "float64" && tipo2 == "int64")
             {
                 PilhaTipos.Push("float64");
             }
@@ -656,19 +658,19 @@
         {
             var tipo1 = PilhaTipos.Pop();
             var tipo2 = PilhaTipos.Pop();
-            if (tipo1 == "float64" && (tipo2 == "float64"))
+            if (tipo1 == "float64" && tipo2 == "float64")
             {
                 PilhaTipos.Push("float64");
             }
-            else if (tipo1 == "int64" && (tipo2 == "int64"))
+            else if (tipo1 == "int64" && tipo2 == "int64")
             {
                 PilhaTipos.Push("int64");
             }
-            else if (tipo1 == "int64" && (tipo2 == "float64"))
+            else if (tipo1 == "int64" && tipo2 == "float64")
             {
                 PilhaTipos.Push("float64");
             }
-            else if (tipo1 == "float64" && (tipo2 == "int64"))
+            else if (tipo1 == "float64" && tipo2 == "int64")
             {
                 PilhaTipos.Push("float64");
             }
@@ -687,19 +689,19 @@
             var tipo1 = PilhaTipos.Pop();
             var tipo2 = PilhaTipos.Pop();
 
-            if (tipo1 == "float64" && (tipo2 == "float64"))
+            if (tipo1 == "float64" && tipo2 == "float64")
             {
                 PilhaTipos.Push("float64");
             }
-            else if (tipo1 == "int64" && (tipo2 == "int64"))
+            else if (tipo1 == "int64" && tipo2 == "int64")
             {
                 PilhaTipos.Push("int64");
             }
-            else if (tipo1 == "int64" && (tipo2 == "float64"))
+            else if (tipo1 == "int64" && tipo2 == "float64")
             {
                 PilhaTipos.Push("float64");
             }
-            else if (tipo1 == "float64" && (tipo2 == "int64"))
+            else if (tipo1 == "float64" && tipo2 == "int64")
             {
                 PilhaTipos.Push("float64");
             }

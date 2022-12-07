@@ -1,4 +1,6 @@
-﻿namespace Interface.GALS
+﻿using Interface.GALS.Constantes;
+
+namespace Interface.GALS.Lexical
 {
     public class Lexico : Constants
     {
@@ -66,7 +68,7 @@
                     }
                 }
             }
-            if (endState < 0 || (endState != state && tokenForState(lastState) == -2))
+            if (endState < 0 || endState != state && tokenForState(lastState) == -2)
                 if (lastState == 0)
                     throw new LexicalError($"{Input[--Position]} {SCANNER_ERROR[lastState]}", start, line);
                 else
