@@ -1,5 +1,7 @@
-﻿using Interface.GALS;
-using Interface.Utils;
+﻿using Interface.Components;
+using Interface.GALS.Lexical;
+using Interface.GALS.Semantic;
+using Interface.GALS.Syntatic;
 
 namespace Interface
 {
@@ -8,10 +10,12 @@ namespace Interface
 
         private bool isSaved = false;
         private bool isEditing = false;
+        public static string saveDirectory;
 
         public Interface()
         {
             InitializeComponent();
+            Console.SetOut(new ControlWriter(textBox1));
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -174,6 +178,7 @@ namespace Interface
             }
             // Limpa área de mensagens
             textBox1.Text = "";
+
         }
 
         private void escreveArquivo()
@@ -186,6 +191,7 @@ namespace Interface
             m_streamWriter.BaseStream.Seek(0, SeekOrigin.Begin);
             // escreve no controle richtextbox
             m_streamWriter.Write(richTextBox1.Text);
+            saveDirectory = fs.Name;
             // fecha o arquivo
             m_streamWriter.Flush();
             m_streamWriter.Close();
@@ -293,12 +299,10 @@ namespace Interface
 
             lexico.setInput(richTextBox1.Text);
 
-            Token t = null;
-
             try
             {
+                textBox1.Text = "Programa compilado com sucesso";
                 sintatico.parse(lexico, semantico);
-                textBox1.Text = "programa compilado com sucesso";
             }
             catch (LexicalError lexicalError)
             {
@@ -321,7 +325,9 @@ namespace Interface
             }
             catch (SemanticError semanticError)
             {
-                //Trata erros semânticos
+                //conferir linha!!!!!!
+                textBox1.Text = $"Erro na linha: {semanticError.Line} - {semanticError.Message}";
+
             }
         }
 
@@ -356,6 +362,11 @@ namespace Interface
         {
             copiarToolStripButton_Click(sender, e);
             richTextBox1.SelectedText = "";
+        }
+
+        public void escreveSaida(string text)
+        {
+            textBox1.Text = text;
         }
     }
 }

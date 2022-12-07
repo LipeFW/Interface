@@ -3,7 +3,7 @@
     public class Token
     {
         public int Id { get; }
-        public string Lexeme { get; }
+        public string Lexeme { get; set; }
         public int Position { get; }
         public int Line { get; }
 

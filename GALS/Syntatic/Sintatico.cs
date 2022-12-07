@@ -1,14 +1,15 @@
-﻿using System.Collections;
+﻿using Interface.GALS.Constantes;
+using System.Collections;
 
-namespace Interface.GALS
+namespace Interface.GALS.Syntatic
 {
     public class Sintatico : Constants
     {
         private Stack stack = new Stack();
         private Token currentToken;
         private Token previousToken;
-        private Lexico scanner;
-        private Semantico semanticAnalyser;
+        private Lexical.Lexico scanner;
+        private Semantic.Semantico semanticAnalyser;
 
         private static bool isTerminal(int x) =>
             x < FIRST_NON_TERMINAL;
@@ -62,11 +63,12 @@ namespace Interface.GALS
                 else
                     throw new SyntaticError(PARSER_ERROR[x], currentToken.Position, currentToken.Line);
             }
-            else // isSemanticAction(x)
+            else if (isSemanticAction(x))
             {
                 semanticAnalyser.executeAction(x - FIRST_SEMANTIC_ACTION, previousToken);
                 return false;
             }
+            return false;
         }
 
         private bool pushProduction(int topStack, int tokenInput)
@@ -86,7 +88,7 @@ namespace Interface.GALS
                 return false;
         }
 
-        public void parse(Lexico scanner, Semantico semanticAnalyser)
+        public void parse(Lexical.Lexico scanner, Semantic.Semantico semanticAnalyser)
         {
             this.scanner = scanner;
             this.semanticAnalyser = semanticAnalyser;

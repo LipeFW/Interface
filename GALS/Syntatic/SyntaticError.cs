@@ -1,4 +1,4 @@
-﻿namespace Interface.GALS
+﻿namespace Interface.GALS.Syntatic
 {
     public class SyntaticError : AnalysisError
     {
