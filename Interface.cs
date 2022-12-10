@@ -234,6 +234,7 @@ namespace Interface
                 {
                     FileStream fs = new FileStream(openFileDialog1.FileName, FileMode.Open, FileAccess.Read);
                     StreamReader m_streamReader = new StreamReader(fs);
+                    saveDirectory = fs.Name;
                     // Lê o arquivo usando a classe StreamReader
                     m_streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
                     // Lê cada linha do stream e faz o parse até a última linha
@@ -301,7 +302,7 @@ namespace Interface
 
             try
             {
-                textBox1.Text = "Programa compilado com sucesso";
+                textBox1.Text = $"";
                 sintatico.parse(lexico, semantico);
             }
             catch (LexicalError lexicalError)

@@ -178,7 +178,6 @@ namespace Interface.GALS.Semantic
             }
             catch
             {
-                //validar o que fazer caso arquivo não salvo
             }
         }
 
@@ -367,7 +366,24 @@ namespace Interface.GALS.Semantic
                 //exibir na caixa de mensagens com linha
                 throw new SemanticError("tipos incompatíveis em expressão aritmética.", line: Line);
             }
-            Codigo += "\nor";
+
+            Codigo += "\nconv.i8";
+            Codigo += "\nstloc divisor_fixed";
+            Codigo += "\nconv.i8";
+            Codigo += "\nstloc dividend_fixed";
+            Codigo += "\nldloc dividend_fixed";
+            Codigo += "\nconv.r8";
+            Codigo += "\nldloc dividend_fixed";
+            Codigo += "\nconv.r8";
+            Codigo += "\nldloc divisor_fixed";
+            Codigo += "\nconv.r8";
+            Codigo += "\ndiv";
+            Codigo += "\nconv.i8";
+            Codigo += "\nconv.r8";
+            Codigo += "\nldloc divisor_fixed";
+            Codigo += "\nconv.r8";
+            Codigo += "\nmul";
+            Codigo += "\nsub";
         }
 
         // feito
@@ -399,7 +415,7 @@ namespace Interface.GALS.Semantic
             }
             else
             {
-                throw new SemanticError("tipos incompatíveis em expressão lógica.", line: Line);
+                throw new SemanticError("tipo(s) incompatível(is) em expressão lógica.", line: Line);
             }
             Codigo += "\nand";
         }
@@ -422,7 +438,15 @@ namespace Interface.GALS.Semantic
         // feito
         private void ActionQuinze()
         {
-            Codigo += ".assembly extern mscorlib { }\r\n.assembly _codigo_objeto{ }\r\n.module _codigo_objeto.exe\r\n\r\n.class public _UNICA{ \r\n.method static public void _principal()\r\n{\r\n.entrypoint";
+            Codigo += ".assembly extern mscorlib { }" +
+                "\r\n.assembly _codigo_objeto{ }" +
+                "\r\n.module _codigo_objeto.exe" +
+                "\r\n\r\n.class public _UNICA{ " +
+                "\r\n.method static public void _principal()" +
+                "\r\n{" +
+                "\r\n.entrypoint" +
+                "\r\n.locals (int64 divisor_fixed)" +
+                "\r\n.locals (int64 dividend_fixed)";
         }
 
         // feito
@@ -496,6 +520,7 @@ namespace Interface.GALS.Semantic
                     Codigo += "\nceq";
                     break;
                 case "!=":
+                    Codigo += "\nceq";
                     Codigo += "\nldc.i4 0";
                     Codigo += "\nceq";
                     break;
@@ -561,13 +586,11 @@ namespace Interface.GALS.Semantic
 
             if (token.Lexeme.Contains("d"))
             {
-                var arraystr = token.Lexeme.Split("d");
-                var numeroDpsDoD = double.Parse(arraystr[1]);
-                // lançando exceção pq o número pode ser mt grande
-                // por exemplo .3d128 => tem que elevar 10^128, ai gera exceção pq é mt grande
-                var result = (decimal)Math.Pow(10, numeroDpsDoD);
-                var aaaa = decimal.Parse(arraystr[0]) * result;
-                var resultadoFinal = decimal.Parse(aaaa + arraystr[1].Substring(arraystr[1].IndexOf("d") + 2));
+                var arrayStr = token.Lexeme.Split("d");
+                var numeroDpsDoD = double.Parse(arrayStr[1]);
+                var resultPotenciacao = (decimal)Math.Pow(10, numeroDpsDoD);
+                var resultMultiplicacao = decimal.Parse(arrayStr[0].Replace(".", ",")) * resultPotenciacao;
+                var resultadoFinal = decimal.Parse(resultMultiplicacao + arrayStr[1].Substring(arrayStr[1].IndexOf("d") + 2));
 
                 Codigo += "\nldc.r8 " + resultadoFinal;
             }
@@ -584,10 +607,10 @@ namespace Interface.GALS.Semantic
 
             if (token.Lexeme.Contains("d"))
             {
-                var arraystr = token.Lexeme.Split("d");
-                var numeroDpsDoD = int.Parse(arraystr[1]);
+                var arrayStr = token.Lexeme.Split("d");
+                var numeroDpsDoD = int.Parse(arrayStr[1]);
                 var result = Math.Pow(10, numeroDpsDoD);
-                var resultadoFinal = (int.Parse(arraystr[0]) * result).ToString() + arraystr[1].Substring(arraystr[1].IndexOf("d") + 2);
+                var resultadoFinal = (int.Parse(arrayStr[0]) * result).ToString() + arrayStr[1].Substring(arrayStr[1].IndexOf("d") + 2);
 
                 Codigo += "\nldc.i8 " + resultadoFinal;
             }

@@ -100,6 +100,7 @@ namespace Interface.GALS.Syntatic
             currentToken = scanner.nextToken();
 
             while (!step()) ;
+            Console.WriteLine($"Programa compilado com sucesso");
         }
 
         public Token getToken() =>
